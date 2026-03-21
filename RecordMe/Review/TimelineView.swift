@@ -2,18 +2,19 @@ import SwiftUI
 
 struct TimelineView: View {
     @ObservedObject var controller: ZoomTimelineController
-    @State private var draggingTrim: TrimHandle? = nil
-    @State private var draggingMarker = false
+    @State private var dragTarget: DragTarget? = nil
 
-    private enum TrimHandle {
-        case start, end
+    private enum DragTarget {
+        case trimStart
+        case trimEnd
+        case marker(UUID)
+        case scrub
     }
 
     var body: some View {
         VStack(spacing: 4) {
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    // Dimmed regions outside trim range
                     let trimStartX = xPosition(for: controller.trimStart, in: geo.size.width)
                     let trimEndX = xPosition(for: controller.trimEnd, in: geo.size.width)
 
@@ -32,14 +33,14 @@ struct TimelineView: View {
                             .offset(x: trimEndX)
                     }
 
-                    // Track background (full width)
+                    // Track background
                     RoundedRectangle(cornerRadius: 2)
                         .fill(Color.gray.opacity(0.2))
                         .frame(height: 4)
                         .frame(maxWidth: .infinity)
                         .offset(y: 14)
 
-                    // Active track (trim range)
+                    // Active track
                     RoundedRectangle(cornerRadius: 2)
                         .fill(Color.gray.opacity(0.4))
                         .frame(width: max(0, trimEndX - trimStartX), height: 4)
@@ -57,9 +58,10 @@ struct TimelineView: View {
                             )
                             .frame(width: max(4, endX - startX), height: 12)
                             .offset(x: startX, y: 8)
+                            .allowsHitTesting(false)
                     }
 
-                    // Markers — tap to select, drag to move (larger hit target, high priority gesture)
+                    // Markers (visual only — interaction handled by unified gesture)
                     ForEach(controller.timeline.regions) { region in
                         let x = xPosition(for: (region.startTime + region.endTime) / 2, in: geo.size.width)
                         Circle()
@@ -68,43 +70,22 @@ struct TimelineView: View {
                             .overlay(
                                 Circle().stroke(controller.selectedRegionID == region.id ? Color.white : Color.clear, lineWidth: 2)
                             )
-                            .padding(8) // extra hit area
-                            .contentShape(Circle().inset(by: -8))
-                            .offset(x: x - 17, y: -8)
-                            .highPriorityGesture(
-                                DragGesture(minimumDistance: 2)
-                                    .onChanged { value in
-                                        draggingMarker = true
-                                        controller.selectedRegionID = region.id
-                                        let time = timePosition(for: value.location.x + x - 17, in: geo.size.width)
-                                        controller.moveRegion(region, to: time)
-                                    }
-                                    .onEnded { _ in
-                                        draggingMarker = false
-                                    }
-                            )
-                            .onTapGesture { controller.selectRegion(region) }
+                            .offset(x: x - 9, y: -2)
+                            .allowsHitTesting(false)
                     }
 
-                    // Trim start handle
-                    trimHandle(at: trimStartX, color: .yellow)
-                        .gesture(
-                            DragGesture(minimumDistance: 0)
-                                .onChanged { value in
-                                    let time = timePosition(for: value.location.x, in: geo.size.width)
-                                    controller.trimStart = max(0, min(time, controller.trimEnd - 0.5))
-                                }
-                        )
+                    // Trim handles (visual only)
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(Color.yellow)
+                        .frame(width: 6, height: 32)
+                        .offset(x: trimStartX - 3)
+                        .allowsHitTesting(false)
 
-                    // Trim end handle
-                    trimHandle(at: trimEndX - 6, color: .yellow)
-                        .gesture(
-                            DragGesture(minimumDistance: 0)
-                                .onChanged { value in
-                                    let time = timePosition(for: value.location.x, in: geo.size.width)
-                                    controller.trimEnd = min(controller.duration, max(time, controller.trimStart + 0.5))
-                                }
-                        )
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(Color.yellow)
+                        .frame(width: 6, height: 32)
+                        .offset(x: trimEndX - 3)
+                        .allowsHitTesting(false)
 
                     // Playhead
                     let playheadX = xPosition(for: controller.currentTime, in: geo.size.width)
@@ -117,46 +98,27 @@ struct TimelineView: View {
                             .frame(width: 2, height: 22)
                     }
                     .offset(x: playheadX - 5, y: -3)
+                    .allowsHitTesting(false)
                 }
                 .frame(height: 32)
                 .contentShape(Rectangle())
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
-                            // Don't scrub while dragging a marker
-                            guard !draggingMarker else { return }
-
-                            // Check if near trim handles first
-                            let trimStartX = xPosition(for: controller.trimStart, in: geo.size.width)
-                            let trimEndX = xPosition(for: controller.trimEnd, in: geo.size.width)
-
-                            if draggingTrim == nil {
-                                if abs(value.startLocation.x - trimStartX) < 15 {
-                                    draggingTrim = .start
-                                } else if abs(value.startLocation.x - trimEndX) < 15 {
-                                    draggingTrim = .end
-                                }
+                            if dragTarget == nil {
+                                dragTarget = identifyTarget(at: value.startLocation, in: geo.size.width)
                             }
-
                             let time = timePosition(for: value.location.x, in: geo.size.width)
-                            switch draggingTrim {
-                            case .start:
-                                controller.trimStart = max(0, min(time, controller.trimEnd - 0.5))
-                            case .end:
-                                controller.trimEnd = min(controller.duration, max(time, controller.trimStart + 0.5))
-                            case nil:
-                                // Scrub playhead
-                                controller.seek(to: time)
-                            }
+                            handleDrag(time: time)
                         }
                         .onEnded { _ in
-                            draggingTrim = nil
+                            dragTarget = nil
                         }
                 )
             }
             .frame(height: 32)
 
-            // Time labels showing trim range
+            // Time labels
             HStack {
                 Text(formatTime(controller.trimStart))
                 Spacer()
@@ -172,12 +134,43 @@ struct TimelineView: View {
         }
     }
 
-    private func trimHandle(at x: CGFloat, color: Color) -> some View {
-        RoundedRectangle(cornerRadius: 2)
-            .fill(color)
-            .frame(width: 6, height: 32)
-            .offset(x: x - 3)
-            .contentShape(Rectangle().inset(by: -8))
+    /// Determine what the user started dragging based on proximity
+    private func identifyTarget(at point: CGPoint, in width: CGFloat) -> DragTarget {
+        let trimStartX = xPosition(for: controller.trimStart, in: width)
+        let trimEndX = xPosition(for: controller.trimEnd, in: width)
+
+        // Check trim handles first (12px hit zone)
+        if abs(point.x - trimStartX) < 12 { return .trimStart }
+        if abs(point.x - trimEndX) < 12 { return .trimEnd }
+
+        // Check markers (20px hit zone)
+        for region in controller.timeline.regions {
+            let markerX = xPosition(for: (region.startTime + region.endTime) / 2, in: width)
+            if abs(point.x - markerX) < 20 {
+                controller.selectedRegionID = region.id
+                return .marker(region.id)
+            }
+        }
+
+        // Default: scrub playhead
+        return .scrub
+    }
+
+    private func handleDrag(time: Double) {
+        switch dragTarget {
+        case .trimStart:
+            controller.trimStart = max(0, min(time, controller.trimEnd - 0.5))
+        case .trimEnd:
+            controller.trimEnd = min(controller.duration, max(time, controller.trimStart + 0.5))
+        case .marker(let id):
+            if let region = controller.timeline.regions.first(where: { $0.id == id }) {
+                controller.moveRegion(region, to: time)
+            }
+        case .scrub:
+            controller.seek(to: time)
+        case nil:
+            break
+        }
     }
 
     private func xPosition(for time: Double, in width: CGFloat) -> CGFloat {
