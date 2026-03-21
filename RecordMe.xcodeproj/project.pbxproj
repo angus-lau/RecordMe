@@ -13,6 +13,7 @@
 		1B0162055B5142EBB0A43D0C /* ZoomEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37A7CC98C45D36952F2DA2A /* ZoomEngine.swift */; };
 		286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */; };
 		2968E853002C4A95A744CC99 /* EventLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E5546D86A776290A1631A2 /* EventLogTests.swift */; };
+		2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E92EECB8B0D1D96A57E9D0 /* HotkeyManager.swift */; };
 		72A6538F91F7BD7788F174B2 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FD8EF0E0FB59CC7CA4D073 /* SettingsTests.swift */; };
 		80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95220530E6701B83D7E3D2C /* EventLog.swift */; };
 		9D39C683EB25DB4FBD0B6177 /* TypingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E014681A1127821BCD497D1 /* TypingDetector.swift */; };
@@ -58,6 +59,7 @@
 		E95220530E6701B83D7E3D2C /* EventLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLog.swift; sourceTree = "<group>"; };
 		F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMeApp.swift; sourceTree = "<group>"; };
 		F37A7CC98C45D36952F2DA2A /* ZoomEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomEngine.swift; sourceTree = "<group>"; };
+		F9E92EECB8B0D1D96A57E9D0 /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -86,6 +88,7 @@
 		2AD8C6178BED7825BB7B8310 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				F9E92EECB8B0D1D96A57E9D0 /* HotkeyManager.swift */,
 				86CBEDC5F0A1ABC8A6FAEB96 /* Permissions.swift */,
 				B4F3730E56088EAE9ABF44AE /* Settings.swift */,
 			);
@@ -242,6 +245,7 @@
 			files = (
 				80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */,
 				D4246281F1F4695431D11078 /* ExportPreset.swift in Sources */,
+				2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */,
 				DA768ECE4AC4B254DBC881B5 /* Permissions.swift in Sources */,
 				286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */,
 				19BB7CBDA7E8ACAED3AABE85 /* Settings.swift in Sources */,
