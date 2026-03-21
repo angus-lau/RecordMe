@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		15BA8702CEAE8675CF700157 /* RecordMeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFA59427AF8C12527CC97C9 /* RecordMeTests.swift */; };
 		286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */; };
+		2968E853002C4A95A744CC99 /* EventLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E5546D86A776290A1631A2 /* EventLogTests.swift */; };
+		80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95220530E6701B83D7E3D2C /* EventLog.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,17 +28,28 @@
 		AC678D1FEFE0F516F0A856F3 /* RecordMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEFA59427AF8C12527CC97C9 /* RecordMeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMeTests.swift; sourceTree = "<group>"; };
 		BF2F223C6CE38A4779A89047 /* RecordMe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RecordMe.entitlements; sourceTree = "<group>"; };
+		C7E5546D86A776290A1631A2 /* EventLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLogTests.swift; sourceTree = "<group>"; };
 		CABB6C0F88805AB8F24306CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E95220530E6701B83D7E3D2C /* EventLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLog.swift; sourceTree = "<group>"; };
 		F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMeApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		0864FBF94C30BF9381CD2EE9 /* Capture */ = {
+			isa = PBXGroup;
+			children = (
+				E95220530E6701B83D7E3D2C /* EventLog.swift */,
+			);
+			path = Capture;
+			sourceTree = "<group>";
+		};
 		286292B4FB98026D249908E6 /* RecordMe */ = {
 			isa = PBXGroup;
 			children = (
 				CABB6C0F88805AB8F24306CD /* Info.plist */,
 				BF2F223C6CE38A4779A89047 /* RecordMe.entitlements */,
 				8DAB9794B2A2FFBA9549D8A8 /* App */,
+				0864FBF94C30BF9381CD2EE9 /* Capture */,
 			);
 			path = RecordMe;
 			sourceTree = "<group>";
@@ -44,6 +57,7 @@
 		56930312F43BE167FB9EC43B /* RecordMeTests */ = {
 			isa = PBXGroup;
 			children = (
+				C7E5546D86A776290A1631A2 /* EventLogTests.swift */,
 				AEFA59427AF8C12527CC97C9 /* RecordMeTests.swift */,
 			);
 			path = RecordMeTests;
@@ -149,6 +163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2968E853002C4A95A744CC99 /* EventLogTests.swift in Sources */,
 				15BA8702CEAE8675CF700157 /* RecordMeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -157,6 +172,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */,
 				286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -258,6 +274,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -274,6 +291,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
