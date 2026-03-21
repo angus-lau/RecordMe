@@ -19,6 +19,7 @@
 		2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E92EECB8B0D1D96A57E9D0 /* HotkeyManager.swift */; };
 		2A542B3232A6ADAC688BA555 /* PermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7CBF6A2F91C4A4B460D7F0 /* PermissionsView.swift */; };
 		2CBCB51F5D7948505BBD4B02 /* AudioCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3572F2F201AAF5D4DCEE2C36 /* AudioCaptureManager.swift */; };
+		3D0DCD2B7163870E83013710 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A0C21AEEF063BF9EE0102A /* PreferencesView.swift */; };
 		3E542E2FF6EC207E1EBF30C8 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9922FE31CD1AE833E13EB0 /* TimelineView.swift */; };
 		42748DE1B1271A00E9E49679 /* MetalContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD1EE08726C2B381EFC43AE /* MetalContext.swift */; };
 		552A18D6A674994BBBA6DD1F /* CaptureSourcePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCB2D194A9F47E84D967EDE /* CaptureSourcePicker.swift */; };
@@ -85,6 +86,7 @@
 		C7E5546D86A776290A1631A2 /* EventLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLogTests.swift; sourceTree = "<group>"; };
 		CABB6C0F88805AB8F24306CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D0FCA19D9FF681886D7A1436 /* MarkerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerDetailView.swift; sourceTree = "<group>"; };
+		D7A0C21AEEF063BF9EE0102A /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		E95220530E6701B83D7E3D2C /* EventLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLog.swift; sourceTree = "<group>"; };
 		EFB714F857717DDF7AD438A8 /* ZoomTransform.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ZoomTransform.metal; sourceTree = "<group>"; };
 		F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMeApp.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				250890D24256292A2EB372AD /* AppState.swift */,
 				6026D6EFC9CCA9D2CB272B39 /* MenuBarView.swift */,
 				5E7CBF6A2F91C4A4B460D7F0 /* PermissionsView.swift */,
+				D7A0C21AEEF063BF9EE0102A /* PreferencesView.swift */,
 				F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */,
 			);
 			path = App;
@@ -321,6 +324,7 @@
 				F7818A1E9B4942B4DD8BA5F5 /* MetalZoomRenderer.swift in Sources */,
 				DA768ECE4AC4B254DBC881B5 /* Permissions.swift in Sources */,
 				2A542B3232A6ADAC688BA555 /* PermissionsView.swift in Sources */,
+				3D0DCD2B7163870E83013710 /* PreferencesView.swift in Sources */,
 				286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */,
 				BC500E9FB5F5B88913BB5E7B /* ReviewWindow.swift in Sources */,
 				224DD631D21712B9187D29C8 /* ScreenCaptureManager.swift in Sources */,
