@@ -71,10 +71,11 @@ final class ZoomTimelineController: ObservableObject {
     }
 
     func addMarker(at time: Double) {
+        // Start at scale 1.0 — user clicks video to set focal point, which activates zoom
         let region = ZoomRegion(
             startTime: max(0, time - 2.0), endTime: time + 2.0,
             focalPoint: CGPoint(x: sourceSize.width / 2, y: sourceSize.height / 2),
-            scale: 2.0, source: .manual
+            scale: 1.0, source: .manual
         )
         timeline.regions.append(region)
         timeline.regions.sort { $0.startTime < $1.startTime }
@@ -91,6 +92,10 @@ final class ZoomTimelineController: ObservableObject {
         guard let id = selectedRegionID,
               let index = timeline.regions.firstIndex(where: { $0.id == id }) else { return }
         timeline.regions[index].focalPoint = point
+        // If marker was just added (scale 1.0), activate zoom to default level
+        if timeline.regions[index].scale < 1.5 {
+            timeline.regions[index].scale = 2.0
+        }
     }
 
     func adjustDuration(delta: Double) {
