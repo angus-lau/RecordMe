@@ -11,6 +11,7 @@
 		15BA8702CEAE8675CF700157 /* RecordMeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFA59427AF8C12527CC97C9 /* RecordMeTests.swift */; };
 		19BB7CBDA7E8ACAED3AABE85 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3730E56088EAE9ABF44AE /* Settings.swift */; };
 		1B0162055B5142EBB0A43D0C /* ZoomEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37A7CC98C45D36952F2DA2A /* ZoomEngine.swift */; };
+		224DD631D21712B9187D29C8 /* ScreenCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EFDFFB23761292E3D50421 /* ScreenCaptureManager.swift */; };
 		286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */; };
 		2968E853002C4A95A744CC99 /* EventLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E5546D86A776290A1631A2 /* EventLogTests.swift */; };
 		2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E92EECB8B0D1D96A57E9D0 /* HotkeyManager.swift */; };
@@ -48,6 +49,7 @@
 		451C9183B4676E1D8862A804 /* TypingDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingDetectorTests.swift; sourceTree = "<group>"; };
 		8607C40CDF69AFBDDCD6F2BD /* ZoomAnimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomAnimatorTests.swift; sourceTree = "<group>"; };
 		86CBEDC5F0A1ABC8A6FAEB96 /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
+		97EFDFFB23761292E3D50421 /* ScreenCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCaptureManager.swift; sourceTree = "<group>"; };
 		995497C1881D5EA638804E7A /* RecordMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A81080AE0FA40310964E6806 /* ZoomEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomEngineTests.swift; sourceTree = "<group>"; };
 		A9811544941AD9AB5D0AAF07 /* EventLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLogger.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 			children = (
 				E95220530E6701B83D7E3D2C /* EventLog.swift */,
 				A9811544941AD9AB5D0AAF07 /* EventLogger.swift */,
+				97EFDFFB23761292E3D50421 /* ScreenCaptureManager.swift */,
 			);
 			path = Capture;
 			sourceTree = "<group>";
@@ -252,6 +255,7 @@
 				2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */,
 				DA768ECE4AC4B254DBC881B5 /* Permissions.swift in Sources */,
 				286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */,
+				224DD631D21712B9187D29C8 /* ScreenCaptureManager.swift in Sources */,
 				19BB7CBDA7E8ACAED3AABE85 /* Settings.swift in Sources */,
 				9D39C683EB25DB4FBD0B6177 /* TypingDetector.swift in Sources */,
 				ECD7643E3EC195840182413A /* ZoomAnimator.swift in Sources */,
