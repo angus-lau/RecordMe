@@ -3,6 +3,7 @@ import SwiftUI
 struct TimelineView: View {
     @ObservedObject var controller: ZoomTimelineController
     @State private var draggingTrim: TrimHandle? = nil
+    @State private var draggingMarker = false
 
     private enum TrimHandle {
         case start, end
@@ -58,22 +59,28 @@ struct TimelineView: View {
                             .offset(x: startX, y: 8)
                     }
 
-                    // Markers — tap to select, drag to move
+                    // Markers — tap to select, drag to move (larger hit target, high priority gesture)
                     ForEach(controller.timeline.regions) { region in
                         let x = xPosition(for: (region.startTime + region.endTime) / 2, in: geo.size.width)
                         Circle()
                             .fill(region.source == .manual ? Color.indigo : Color.orange)
-                            .frame(width: 14, height: 14)
+                            .frame(width: 18, height: 18)
                             .overlay(
                                 Circle().stroke(controller.selectedRegionID == region.id ? Color.white : Color.clear, lineWidth: 2)
                             )
-                            .offset(x: x - 7, y: 0)
-                            .gesture(
-                                DragGesture(minimumDistance: 3)
+                            .padding(8) // extra hit area
+                            .contentShape(Circle().inset(by: -8))
+                            .offset(x: x - 17, y: -8)
+                            .highPriorityGesture(
+                                DragGesture(minimumDistance: 2)
                                     .onChanged { value in
+                                        draggingMarker = true
                                         controller.selectedRegionID = region.id
-                                        let time = timePosition(for: value.location.x, in: geo.size.width)
+                                        let time = timePosition(for: value.location.x + x - 17, in: geo.size.width)
                                         controller.moveRegion(region, to: time)
+                                    }
+                                    .onEnded { _ in
+                                        draggingMarker = false
                                     }
                             )
                             .onTapGesture { controller.selectRegion(region) }
@@ -116,6 +123,9 @@ struct TimelineView: View {
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
+                            // Don't scrub while dragging a marker
+                            guard !draggingMarker else { return }
+
                             // Check if near trim handles first
                             let trimStartX = xPosition(for: controller.trimStart, in: geo.size.width)
                             let trimEndX = xPosition(for: controller.trimEnd, in: geo.size.width)
