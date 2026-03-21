@@ -22,6 +22,7 @@
 		C565F744D3453E65F33CED98 /* ZoomState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420C0E8ABA3EF8997DF4D107 /* ZoomState.swift */; };
 		D4246281F1F4695431D11078 /* ExportPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EE24DCFD60122D18E1D665 /* ExportPreset.swift */; };
 		D8CC17384600CD4DBD7BDDCE /* TypingDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C9183B4676E1D8862A804 /* TypingDetectorTests.swift */; };
+		DA768ECE4AC4B254DBC881B5 /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86CBEDC5F0A1ABC8A6FAEB96 /* Permissions.swift */; };
 		ECD7643E3EC195840182413A /* ZoomAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88B814FE0283CC083C85812 /* ZoomAnimator.swift */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +45,7 @@
 		420C0E8ABA3EF8997DF4D107 /* ZoomState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomState.swift; sourceTree = "<group>"; };
 		451C9183B4676E1D8862A804 /* TypingDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingDetectorTests.swift; sourceTree = "<group>"; };
 		8607C40CDF69AFBDDCD6F2BD /* ZoomAnimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomAnimatorTests.swift; sourceTree = "<group>"; };
+		86CBEDC5F0A1ABC8A6FAEB96 /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
 		995497C1881D5EA638804E7A /* RecordMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A81080AE0FA40310964E6806 /* ZoomEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomEngineTests.swift; sourceTree = "<group>"; };
 		AC678D1FEFE0F516F0A856F3 /* RecordMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,6 +86,7 @@
 		2AD8C6178BED7825BB7B8310 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				86CBEDC5F0A1ABC8A6FAEB96 /* Permissions.swift */,
 				B4F3730E56088EAE9ABF44AE /* Settings.swift */,
 			);
 			path = Utils;
@@ -239,6 +242,7 @@
 			files = (
 				80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */,
 				D4246281F1F4695431D11078 /* ExportPreset.swift in Sources */,
+				DA768ECE4AC4B254DBC881B5 /* Permissions.swift in Sources */,
 				286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */,
 				19BB7CBDA7E8ACAED3AABE85 /* Settings.swift in Sources */,
 				9D39C683EB25DB4FBD0B6177 /* TypingDetector.swift in Sources */,
