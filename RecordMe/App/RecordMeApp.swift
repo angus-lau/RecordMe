@@ -11,6 +11,22 @@ struct RecordMeApp: App {
             menuBarLabel
         }
         .menuBarExtraStyle(.window)
+
+        Window("Review Recording", id: "review") {
+            if let controller = appState.reviewController {
+                ReviewWindow(
+                    controller: controller,
+                    exportPipeline: appState.exportPipeline,
+                    settings: appState.settings,
+                    onExport: { preset in Task { await appState.startExport(preset: preset) } },
+                    onDiscard: { appState.discardRecording() }
+                )
+            }
+        }
+
+        Window("Preferences", id: "preferences") {
+            PreferencesView(settings: appState.settings)
+        }
     }
 
     @ViewBuilder
