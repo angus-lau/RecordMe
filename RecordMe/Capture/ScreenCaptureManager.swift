@@ -83,8 +83,15 @@ final class ScreenCaptureManager: NSObject {
         isRecording = false
         try await stream.stopCapture()
         self.stream = nil
-        videoInput?.markAsFinished()
-        await writer.finishWriting()
+
+        // Only finish writing if the session actually started (frames were received)
+        if sessionStarted && writer.status == .writing {
+            videoInput?.markAsFinished()
+            await writer.finishWriting()
+        } else {
+            writer.cancelWriting()
+        }
+
         let url = writer.outputURL
         assetWriter = nil
         assetWriterExposed = nil
