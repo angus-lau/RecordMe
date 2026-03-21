@@ -25,13 +25,22 @@ struct ReviewWindow: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // Video preview with zoom applied
+            // Video preview with zoom applied — click to set focal point
             GeometryReader { geo in
                 VideoPreviewView(player: controller.player)
                     .scaleEffect(currentZoomState.scale)
                     .offset(zoomOffset(in: geo.size))
                     .clipped()
                     .animation(.easeInOut(duration: 0.05), value: currentZoomState.scale)
+                    .contentShape(Rectangle())
+                    .onTapGesture { location in
+                        // Map click position to source coordinates
+                        let normalizedX = location.x / geo.size.width
+                        let normalizedY = location.y / geo.size.height
+                        let sourceX = normalizedX * controller.sourceSize.width
+                        let sourceY = normalizedY * controller.sourceSize.height
+                        controller.setFocalPoint(CGPoint(x: sourceX, y: sourceY))
+                    }
             }
             .aspectRatio(controller.sourceSize.width / controller.sourceSize.height, contentMode: .fit)
             .clipped()
@@ -42,6 +51,16 @@ struct ReviewWindow: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 10).padding(.vertical, 4)
                         .background(Color.indigo.opacity(0.8))
+                        .cornerRadius(4).padding(12)
+                }
+            }
+            .overlay(alignment: .bottomLeading) {
+                if controller.selectedRegionID != nil {
+                    Text("Click video to set zoom target")
+                        .font(.system(size: 11))
+                        .foregroundColor(.white.opacity(0.7))
+                        .padding(.horizontal, 10).padding(.vertical, 4)
+                        .background(Color.black.opacity(0.5))
                         .cornerRadius(4).padding(12)
                 }
             }

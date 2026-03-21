@@ -87,6 +87,12 @@ final class ZoomTimelineController: ObservableObject {
         timeline.regions[index].scale = max(1.5, min(3.0, timeline.regions[index].scale + delta))
     }
 
+    func setFocalPoint(_ point: CGPoint) {
+        guard let id = selectedRegionID,
+              let index = timeline.regions.firstIndex(where: { $0.id == id }) else { return }
+        timeline.regions[index].focalPoint = point
+    }
+
     func adjustDuration(delta: Double) {
         guard let id = selectedRegionID,
               let index = timeline.regions.firstIndex(where: { $0.id == id }) else { return }
