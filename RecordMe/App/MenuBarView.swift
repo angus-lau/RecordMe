@@ -47,37 +47,63 @@ struct MenuBarView: View {
         VStack(alignment: .leading, spacing: 4) {
             Text("Capture Source").font(.subheadline).foregroundColor(.secondary)
 
-            if !state.sourcePicker.displays.isEmpty {
-                Menu("Display") {
-                    ForEach(state.sourcePicker.displays, id: \.displayID) { display in
-                        Button("Display \(display.displayID) (\(display.width)x\(display.height))") {
-                            state.sourcePicker.selectedSource = .display(display)
+            if state.sourcePicker.displays.isEmpty && state.sourcePicker.windows.isEmpty {
+                Text("Grant Screen Recording permission to see sources")
+                    .font(.caption)
+                    .foregroundColor(.orange)
+                Button("Open Privacy Settings") {
+                    NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")!)
+                }
+                .font(.caption)
+            } else {
+                // Current selection
+                Text(currentSourceLabel)
+                    .font(.caption)
+                    .foregroundColor(.green)
+
+                HStack(spacing: 8) {
+                    if !state.sourcePicker.displays.isEmpty {
+                        Menu("Display") {
+                            ForEach(state.sourcePicker.displays, id: \.displayID) { display in
+                                Button("Display \(display.displayID) (\(display.width)x\(display.height))") {
+                                    state.sourcePicker.selectedSource = .display(display)
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            if !state.sourcePicker.windows.isEmpty {
-                Menu("Window") {
-                    ForEach(state.sourcePicker.windows, id: \.windowID) { window in
-                        Button("\(window.owningApplication?.applicationName ?? "Unknown") — \(window.title ?? "Untitled")") {
-                            state.sourcePicker.selectedSource = .window(window)
+                    if !state.sourcePicker.windows.isEmpty {
+                        Menu("Window") {
+                            ForEach(state.sourcePicker.windows, id: \.windowID) { window in
+                                Button("\(window.owningApplication?.applicationName ?? "Unknown") — \(window.title ?? "Untitled")") {
+                                    state.sourcePicker.selectedSource = .window(window)
+                                }
+                            }
                         }
                     }
-                }
-            }
 
-            if !state.sourcePicker.apps.isEmpty {
-                Menu("App") {
-                    ForEach(state.sourcePicker.apps, id: \.processID) { app in
-                        Button(app.applicationName) {
-                            if let display = state.sourcePicker.displays.first {
-                                state.sourcePicker.selectedSource = .app(app, display)
+                    if !state.sourcePicker.apps.isEmpty {
+                        Menu("App") {
+                            ForEach(state.sourcePicker.apps, id: \.processID) { app in
+                                Button(app.applicationName) {
+                                    if let display = state.sourcePicker.displays.first {
+                                        state.sourcePicker.selectedSource = .app(app, display)
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    private var currentSourceLabel: String {
+        guard let source = state.sourcePicker.selectedSource else { return "None selected" }
+        switch source {
+        case .display(let d): return "Display \(d.displayID)"
+        case .window(let w): return "\(w.owningApplication?.applicationName ?? "Window") — \(w.title ?? "Untitled")"
+        case .app(let a, _): return "App: \(a.applicationName)"
         }
     }
 
