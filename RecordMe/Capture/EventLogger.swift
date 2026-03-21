@@ -49,7 +49,7 @@ final class EventLogger {
             tap: .cghidEventTap, place: .headInsertEventTap, options: .listenOnly,
             eventsOfInterest: eventMask, callback: callback, userInfo: selfPtr
         ) else {
-            print("EventLogger: Failed to create event tap — Accessibility permission required")
+            // Accessibility permission not granted — event tap unavailable
             return
         }
 

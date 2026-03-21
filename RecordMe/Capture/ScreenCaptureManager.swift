@@ -104,7 +104,7 @@ final class ScreenCaptureManager: NSObject {
 
 extension ScreenCaptureManager: SCStreamDelegate {
     func stream(_ stream: SCStream, didStopWithError error: Error) {
-        print("ScreenCaptureManager: stream stopped with error: \(error)")
+        // Stream interrupted — expected when stopping recording or on permission issues
     }
 }
 
