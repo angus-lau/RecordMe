@@ -65,7 +65,6 @@ final class ZoomTimelineController: ObservableObject {
 
     func selectRegion(_ region: ZoomRegion) {
         selectedRegionID = region.id
-        seek(to: region.startTime)
     }
 
     func deleteSelectedRegion() {
@@ -99,7 +98,6 @@ final class ZoomTimelineController: ObservableObject {
         let newEnd = min(duration, newStart + region.duration)
         timeline.regions[index].startTime = newEnd - region.duration
         timeline.regions[index].endTime = newEnd
-        seek(to: centerTime)
     }
 
     func setFocalPoint(_ point: CGPoint) {
