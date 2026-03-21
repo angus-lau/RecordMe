@@ -29,8 +29,8 @@ final class ZoomTimelineController: ObservableObject {
         let player = AVPlayer(url: intermediateURL)
         self.player = player
 
-        // Update currentTime during playback (~30 fps)
-        let interval = CMTime(value: 1, timescale: 30)
+        // Update currentTime during playback (~60 fps for smooth zoom transitions)
+        let interval = CMTime(value: 1, timescale: 60)
         timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
             Task { @MainActor in
                 self?.currentTime = CMTimeGetSeconds(time)

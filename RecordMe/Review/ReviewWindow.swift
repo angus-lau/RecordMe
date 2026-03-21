@@ -31,7 +31,9 @@ struct ReviewWindow: View {
                     .scaleEffect(currentZoomState.scale)
                     .offset(zoomOffset(in: geo.size))
                     .clipped()
-                    .animation(.easeInOut(duration: 0.05), value: currentZoomState.scale)
+                    .animation(.interpolatingSpring(stiffness: 200, damping: 25), value: currentZoomState.scale)
+                    .animation(.interpolatingSpring(stiffness: 200, damping: 25), value: currentZoomState.focalPoint.x)
+                    .animation(.interpolatingSpring(stiffness: 200, damping: 25), value: currentZoomState.focalPoint.y)
                     .contentShape(Rectangle())
                     .onTapGesture { location in
                         // Map click position to source coordinates
