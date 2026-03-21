@@ -147,9 +147,8 @@ struct MenuBarView: View {
             sessionDir: sessionDir
         )
 
-        if state.micEnabled, let writer = state.screenCapture.assetWriterExposed {
-            state.audioCapture.attachToWriter(writer)
-            try? state.audioCapture.startCapture()
+        if state.micEnabled {
+            try? state.audioCapture.startCapture(sessionDir: sessionDir)
         }
 
         state.phase = .recording(startTime: Date())
