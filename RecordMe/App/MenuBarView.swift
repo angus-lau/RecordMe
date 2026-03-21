@@ -152,6 +152,9 @@ struct MenuBarView: View {
         }
 
         state.phase = .recording(startTime: Date())
+
+        // Dismiss the menu bar panel so it's not covering the screen during recording
+        NSApp.keyWindow?.close()
     }
 
     private func stopRecording() async {
