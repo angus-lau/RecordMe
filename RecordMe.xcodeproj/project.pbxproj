@@ -15,6 +15,7 @@
 		286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */; };
 		2968E853002C4A95A744CC99 /* EventLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E5546D86A776290A1631A2 /* EventLogTests.swift */; };
 		2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E92EECB8B0D1D96A57E9D0 /* HotkeyManager.swift */; };
+		2CBCB51F5D7948505BBD4B02 /* AudioCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3572F2F201AAF5D4DCEE2C36 /* AudioCaptureManager.swift */; };
 		552A18D6A674994BBBA6DD1F /* CaptureSourcePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCB2D194A9F47E84D967EDE /* CaptureSourcePicker.swift */; };
 		72A6538F91F7BD7788F174B2 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FD8EF0E0FB59CC7CA4D073 /* SettingsTests.swift */; };
 		80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95220530E6701B83D7E3D2C /* EventLog.swift */; };
@@ -46,6 +47,7 @@
 		25EE24DCFD60122D18E1D665 /* ExportPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPreset.swift; sourceTree = "<group>"; };
 		2E014681A1127821BCD497D1 /* TypingDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingDetector.swift; sourceTree = "<group>"; };
 		2E191E94D0A0CF00179E1502 /* ZoomRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomRegion.swift; sourceTree = "<group>"; };
+		3572F2F201AAF5D4DCEE2C36 /* AudioCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCaptureManager.swift; sourceTree = "<group>"; };
 		420C0E8ABA3EF8997DF4D107 /* ZoomState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomState.swift; sourceTree = "<group>"; };
 		451C9183B4676E1D8862A804 /* TypingDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingDetectorTests.swift; sourceTree = "<group>"; };
 		8607C40CDF69AFBDDCD6F2BD /* ZoomAnimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomAnimatorTests.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 		0864FBF94C30BF9381CD2EE9 /* Capture */ = {
 			isa = PBXGroup;
 			children = (
+				3572F2F201AAF5D4DCEE2C36 /* AudioCaptureManager.swift */,
 				9CCB2D194A9F47E84D967EDE /* CaptureSourcePicker.swift */,
 				E95220530E6701B83D7E3D2C /* EventLog.swift */,
 				A9811544941AD9AB5D0AAF07 /* EventLogger.swift */,
@@ -252,6 +255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CBCB51F5D7948505BBD4B02 /* AudioCaptureManager.swift in Sources */,
 				552A18D6A674994BBBA6DD1F /* CaptureSourcePicker.swift in Sources */,
 				80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */,
 				AF2062A2DABA35D2C21403CC /* EventLogger.swift in Sources */,
