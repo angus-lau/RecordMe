@@ -10,6 +10,7 @@
 		07F81ED604B81A1CA7A075DA /* ZoomAnimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8607C40CDF69AFBDDCD6F2BD /* ZoomAnimatorTests.swift */; };
 		15BA8702CEAE8675CF700157 /* RecordMeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEFA59427AF8C12527CC97C9 /* RecordMeTests.swift */; };
 		15F70F5746B338BD44A0D85F /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6026D6EFC9CCA9D2CB272B39 /* MenuBarView.swift */; };
+		18C3F2DE4B99A216BE968FDA /* MarkerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FCA19D9FF681886D7A1436 /* MarkerDetailView.swift */; };
 		19BB7CBDA7E8ACAED3AABE85 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3730E56088EAE9ABF44AE /* Settings.swift */; };
 		1B0162055B5142EBB0A43D0C /* ZoomEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F37A7CC98C45D36952F2DA2A /* ZoomEngine.swift */; };
 		224DD631D21712B9187D29C8 /* ScreenCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97EFDFFB23761292E3D50421 /* ScreenCaptureManager.swift */; };
@@ -17,8 +18,10 @@
 		2968E853002C4A95A744CC99 /* EventLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E5546D86A776290A1631A2 /* EventLogTests.swift */; };
 		2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E92EECB8B0D1D96A57E9D0 /* HotkeyManager.swift */; };
 		2CBCB51F5D7948505BBD4B02 /* AudioCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3572F2F201AAF5D4DCEE2C36 /* AudioCaptureManager.swift */; };
+		3E542E2FF6EC207E1EBF30C8 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9922FE31CD1AE833E13EB0 /* TimelineView.swift */; };
 		42748DE1B1271A00E9E49679 /* MetalContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD1EE08726C2B381EFC43AE /* MetalContext.swift */; };
 		552A18D6A674994BBBA6DD1F /* CaptureSourcePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCB2D194A9F47E84D967EDE /* CaptureSourcePicker.swift */; };
+		6488781F63FA75AEABA74C76 /* VideoPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0789F319FA0D44B2E525A52E /* VideoPreviewView.swift */; };
 		6D326823BDDBC6D9C980A3AC /* ZoomTimelineController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD794FC1422E3938C6F7A440 /* ZoomTimelineController.swift */; };
 		72A6538F91F7BD7788F174B2 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FD8EF0E0FB59CC7CA4D073 /* SettingsTests.swift */; };
 		7A6411C0FF77A680E8ECCBD0 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250890D24256292A2EB372AD /* AppState.swift */; };
@@ -29,6 +32,7 @@
 		A94D67BF38069D44F9A1E6ED /* ZoomEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81080AE0FA40310964E6806 /* ZoomEngineTests.swift */; };
 		AD537661FCDC78A6FA5022F5 /* ZoomModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BB98FB4A83E4C350E42DBD /* ZoomModelTests.swift */; };
 		AF2062A2DABA35D2C21403CC /* EventLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9811544941AD9AB5D0AAF07 /* EventLogger.swift */; };
+		BC500E9FB5F5B88913BB5E7B /* ReviewWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CA22E8CA6B5D1A51A2E210 /* ReviewWindow.swift */; };
 		BE06F7A3D1D5922FBC1AA465 /* ZoomRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E191E94D0A0CF00179E1502 /* ZoomRegion.swift */; };
 		C565F744D3453E65F33CED98 /* ZoomState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420C0E8ABA3EF8997DF4D107 /* ZoomState.swift */; };
 		D4246281F1F4695431D11078 /* ExportPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EE24DCFD60122D18E1D665 /* ExportPreset.swift */; };
@@ -49,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0789F319FA0D44B2E525A52E /* VideoPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewView.swift; sourceTree = "<group>"; };
 		12BB98FB4A83E4C350E42DBD /* ZoomModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomModelTests.swift; sourceTree = "<group>"; };
 		21FD8EF0E0FB59CC7CA4D073 /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		250890D24256292A2EB372AD /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -66,6 +71,7 @@
 		97EFDFFB23761292E3D50421 /* ScreenCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCaptureManager.swift; sourceTree = "<group>"; };
 		995497C1881D5EA638804E7A /* RecordMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D6AD0C8C2E8741800B5DB7 /* ExportPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPipeline.swift; sourceTree = "<group>"; };
+		9C9922FE31CD1AE833E13EB0 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		9CCB2D194A9F47E84D967EDE /* CaptureSourcePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSourcePicker.swift; sourceTree = "<group>"; };
 		A81080AE0FA40310964E6806 /* ZoomEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomEngineTests.swift; sourceTree = "<group>"; };
 		A9811544941AD9AB5D0AAF07 /* EventLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLogger.swift; sourceTree = "<group>"; };
@@ -76,10 +82,12 @@
 		BF2F223C6CE38A4779A89047 /* RecordMe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RecordMe.entitlements; sourceTree = "<group>"; };
 		C7E5546D86A776290A1631A2 /* EventLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLogTests.swift; sourceTree = "<group>"; };
 		CABB6C0F88805AB8F24306CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D0FCA19D9FF681886D7A1436 /* MarkerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerDetailView.swift; sourceTree = "<group>"; };
 		E95220530E6701B83D7E3D2C /* EventLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLog.swift; sourceTree = "<group>"; };
 		EFB714F857717DDF7AD438A8 /* ZoomTransform.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ZoomTransform.metal; sourceTree = "<group>"; };
 		F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMeApp.swift; sourceTree = "<group>"; };
 		F37A7CC98C45D36952F2DA2A /* ZoomEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomEngine.swift; sourceTree = "<group>"; };
+		F9CA22E8CA6B5D1A51A2E210 /* ReviewWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewWindow.swift; sourceTree = "<group>"; };
 		F9E92EECB8B0D1D96A57E9D0 /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 		FD794FC1422E3938C6F7A440 /* ZoomTimelineController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomTimelineController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,6 +96,10 @@
 		00651DABB5D211DA06DF6202 /* Review */ = {
 			isa = PBXGroup;
 			children = (
+				D0FCA19D9FF681886D7A1436 /* MarkerDetailView.swift */,
+				F9CA22E8CA6B5D1A51A2E210 /* ReviewWindow.swift */,
+				9C9922FE31CD1AE833E13EB0 /* TimelineView.swift */,
+				0789F319FA0D44B2E525A52E /* VideoPreviewView.swift */,
 				FD794FC1422E3938C6F7A440 /* ZoomTimelineController.swift */,
 			);
 			path = Review;
@@ -300,14 +312,18 @@
 				96B36E10B768DE6C11F18F62 /* ExportPipeline.swift in Sources */,
 				D4246281F1F4695431D11078 /* ExportPreset.swift in Sources */,
 				2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */,
+				18C3F2DE4B99A216BE968FDA /* MarkerDetailView.swift in Sources */,
 				15F70F5746B338BD44A0D85F /* MenuBarView.swift in Sources */,
 				42748DE1B1271A00E9E49679 /* MetalContext.swift in Sources */,
 				F7818A1E9B4942B4DD8BA5F5 /* MetalZoomRenderer.swift in Sources */,
 				DA768ECE4AC4B254DBC881B5 /* Permissions.swift in Sources */,
 				286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */,
+				BC500E9FB5F5B88913BB5E7B /* ReviewWindow.swift in Sources */,
 				224DD631D21712B9187D29C8 /* ScreenCaptureManager.swift in Sources */,
 				19BB7CBDA7E8ACAED3AABE85 /* Settings.swift in Sources */,
+				3E542E2FF6EC207E1EBF30C8 /* TimelineView.swift in Sources */,
 				9D39C683EB25DB4FBD0B6177 /* TypingDetector.swift in Sources */,
+				6488781F63FA75AEABA74C76 /* VideoPreviewView.swift in Sources */,
 				ECD7643E3EC195840182413A /* ZoomAnimator.swift in Sources */,
 				1B0162055B5142EBB0A43D0C /* ZoomEngine.swift in Sources */,
 				BE06F7A3D1D5922FBC1AA465 /* ZoomRegion.swift in Sources */,
