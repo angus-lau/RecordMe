@@ -21,6 +21,7 @@
 		72A6538F91F7BD7788F174B2 /* SettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FD8EF0E0FB59CC7CA4D073 /* SettingsTests.swift */; };
 		80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95220530E6701B83D7E3D2C /* EventLog.swift */; };
 		823BE18C03283B2F181B0E3E /* ZoomTransform.metal in Sources */ = {isa = PBXBuildFile; fileRef = EFB714F857717DDF7AD438A8 /* ZoomTransform.metal */; };
+		96B36E10B768DE6C11F18F62 /* ExportPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D6AD0C8C2E8741800B5DB7 /* ExportPipeline.swift */; };
 		9D39C683EB25DB4FBD0B6177 /* TypingDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E014681A1127821BCD497D1 /* TypingDetector.swift */; };
 		A94D67BF38069D44F9A1E6ED /* ZoomEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81080AE0FA40310964E6806 /* ZoomEngineTests.swift */; };
 		AD537661FCDC78A6FA5022F5 /* ZoomModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BB98FB4A83E4C350E42DBD /* ZoomModelTests.swift */; };
@@ -59,6 +60,7 @@
 		86CBEDC5F0A1ABC8A6FAEB96 /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
 		97EFDFFB23761292E3D50421 /* ScreenCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCaptureManager.swift; sourceTree = "<group>"; };
 		995497C1881D5EA638804E7A /* RecordMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		99D6AD0C8C2E8741800B5DB7 /* ExportPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPipeline.swift; sourceTree = "<group>"; };
 		9CCB2D194A9F47E84D967EDE /* CaptureSourcePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureSourcePicker.swift; sourceTree = "<group>"; };
 		A81080AE0FA40310964E6806 /* ZoomEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomEngineTests.swift; sourceTree = "<group>"; };
 		A9811544941AD9AB5D0AAF07 /* EventLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLogger.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 		F4C1BF1A8FC134F6F5EECBDF /* Export */ = {
 			isa = PBXGroup;
 			children = (
+				99D6AD0C8C2E8741800B5DB7 /* ExportPipeline.swift */,
 				25EE24DCFD60122D18E1D665 /* ExportPreset.swift */,
 				4812A7223D6D17E44DA3F388 /* MetalZoomRenderer.swift */,
 			);
@@ -276,6 +279,7 @@
 				552A18D6A674994BBBA6DD1F /* CaptureSourcePicker.swift in Sources */,
 				80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */,
 				AF2062A2DABA35D2C21403CC /* EventLogger.swift in Sources */,
+				96B36E10B768DE6C11F18F62 /* ExportPipeline.swift in Sources */,
 				D4246281F1F4695431D11078 /* ExportPreset.swift in Sources */,
 				2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */,
 				42748DE1B1271A00E9E49679 /* MetalContext.swift in Sources */,
