@@ -12,15 +12,24 @@ final class ExportPipeline: ObservableObject {
         outputURL: URL,
         timeline: ZoomTimeline,
         preset: ExportPreset,
-        sourceSize: CGSize
+        sourceSize: CGSize,
+        trimStart: Double = 0,
+        trimEnd: Double? = nil
     ) async throws {
         await MainActor.run { isExporting = true; progress = 0.0 }
 
         let asset = AVAsset(url: intermediateURL)
         let duration = try await asset.load(.duration)
         let durationSeconds = CMTimeGetSeconds(duration)
+        let effectiveTrimEnd = trimEnd ?? durationSeconds
+        let trimmedDuration = effectiveTrimEnd - trimStart
 
         let reader = try AVAssetReader(asset: asset)
+
+        // Set time range for trimming
+        let startCMTime = CMTime(seconds: trimStart, preferredTimescale: 600)
+        let rangeDuration = CMTime(seconds: trimmedDuration, preferredTimescale: 600)
+        reader.timeRange = CMTimeRange(start: startCMTime, duration: rangeDuration)
 
         let videoTrack = try await asset.loadTracks(withMediaType: .video).first!
         let readerVideoOutput = AVAssetReaderTrackOutput(
@@ -76,6 +85,7 @@ final class ExportPipeline: ObservableObject {
 
             guard let sourcePixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { continue }
 
+            // Use original timestamp for zoom state lookup (matches event log times)
             let zoomState = timeline.zoomState(at: seconds)
 
             var destPixelBuffer: CVPixelBuffer?
@@ -90,12 +100,16 @@ final class ExportPipeline: ObservableObject {
                 sourceSize: sourceSize
             )
 
+            // Offset timestamp so trimmed output starts at 0
+            let outputTime = CMTime(seconds: seconds - trimStart, preferredTimescale: 600)
+
             while !writerVideoInput.isReadyForMoreMediaData {
                 try await Task.sleep(nanoseconds: 10_000_000)
             }
-            pixelBufferAdaptor.append(dest, withPresentationTime: timestamp)
+            pixelBufferAdaptor.append(dest, withPresentationTime: outputTime)
 
-            await MainActor.run { progress = seconds / durationSeconds }
+            let elapsed = seconds - trimStart
+            await MainActor.run { progress = elapsed / trimmedDuration }
         }
 
         if let audioOutput = readerAudioOutput, let audioInput = writerAudioInput {

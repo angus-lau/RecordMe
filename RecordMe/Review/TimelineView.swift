@@ -2,17 +2,47 @@ import SwiftUI
 
 struct TimelineView: View {
     @ObservedObject var controller: ZoomTimelineController
+    @State private var draggingTrim: TrimHandle? = nil
+
+    private enum TrimHandle {
+        case start, end
+    }
 
     var body: some View {
         VStack(spacing: 4) {
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    // Track background
+                    // Dimmed regions outside trim range
+                    let trimStartX = xPosition(for: controller.trimStart, in: geo.size.width)
+                    let trimEndX = xPosition(for: controller.trimEnd, in: geo.size.width)
+
+                    // Left dimmed area
+                    if trimStartX > 0 {
+                        Rectangle()
+                            .fill(Color.black.opacity(0.4))
+                            .frame(width: trimStartX, height: 32)
+                    }
+
+                    // Right dimmed area
+                    if trimEndX < geo.size.width {
+                        Rectangle()
+                            .fill(Color.black.opacity(0.4))
+                            .frame(width: geo.size.width - trimEndX, height: 32)
+                            .offset(x: trimEndX)
+                    }
+
+                    // Track background (full width)
                     RoundedRectangle(cornerRadius: 2)
                         .fill(Color.gray.opacity(0.2))
                         .frame(height: 4)
                         .frame(maxWidth: .infinity)
                         .offset(y: 14)
+
+                    // Active track (trim range)
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(Color.gray.opacity(0.4))
+                        .frame(width: max(0, trimEndX - trimStartX), height: 4)
+                        .offset(x: trimStartX, y: 14)
 
                     // Zoom region highlights
                     ForEach(controller.timeline.regions) { region in
@@ -41,6 +71,26 @@ struct TimelineView: View {
                             .onTapGesture { controller.selectRegion(region) }
                     }
 
+                    // Trim start handle
+                    trimHandle(at: trimStartX, color: .yellow)
+                        .gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { value in
+                                    let time = timePosition(for: value.location.x, in: geo.size.width)
+                                    controller.trimStart = max(0, min(time, controller.trimEnd - 0.5))
+                                }
+                        )
+
+                    // Trim end handle
+                    trimHandle(at: trimEndX - 6, color: .yellow)
+                        .gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { value in
+                                    let time = timePosition(for: value.location.x, in: geo.size.width)
+                                    controller.trimEnd = min(controller.duration, max(time, controller.trimStart + 0.5))
+                                }
+                        )
+
                     // Playhead
                     let playheadX = xPosition(for: controller.currentTime, in: geo.size.width)
                     VStack(spacing: 0) {
@@ -58,22 +108,58 @@ struct TimelineView: View {
                 .gesture(
                     DragGesture(minimumDistance: 0)
                         .onChanged { value in
+                            // Check if near trim handles first
+                            let trimStartX = xPosition(for: controller.trimStart, in: geo.size.width)
+                            let trimEndX = xPosition(for: controller.trimEnd, in: geo.size.width)
+
+                            if draggingTrim == nil {
+                                if abs(value.startLocation.x - trimStartX) < 15 {
+                                    draggingTrim = .start
+                                } else if abs(value.startLocation.x - trimEndX) < 15 {
+                                    draggingTrim = .end
+                                }
+                            }
+
                             let time = timePosition(for: value.location.x, in: geo.size.width)
-                            controller.seek(to: time)
+                            switch draggingTrim {
+                            case .start:
+                                controller.trimStart = max(0, min(time, controller.trimEnd - 0.5))
+                            case .end:
+                                controller.trimEnd = min(controller.duration, max(time, controller.trimStart + 0.5))
+                            case nil:
+                                // Scrub playhead
+                                controller.seek(to: time)
+                            }
+                        }
+                        .onEnded { _ in
+                            draggingTrim = nil
                         }
                 )
             }
             .frame(height: 32)
 
-            // Time labels
+            // Time labels showing trim range
             HStack {
-                Text(formatTime(0))
+                Text(formatTime(controller.trimStart))
                 Spacer()
-                Text(formatTime(controller.duration))
+                if controller.trimStart > 0 || controller.trimEnd < controller.duration {
+                    Text("Trimmed: \(formatTime(controller.trimEnd - controller.trimStart))")
+                        .foregroundColor(.yellow)
+                }
+                Spacer()
+                Text(formatTime(controller.trimEnd))
             }
             .font(.system(size: 11, design: .monospaced))
             .foregroundColor(.secondary)
         }
+    }
+
+    private func trimHandle(at x: CGFloat, color: Color) -> some View {
+        RoundedRectangle(cornerRadius: 2)
+            .fill(color)
+            .frame(width: 6, height: 32)
+            .offset(x: x - 3)
+            .contentShape(Rectangle().inset(by: -8))
     }
 
     private func xPosition(for time: Double, in width: CGFloat) -> CGFloat {

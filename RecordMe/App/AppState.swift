@@ -81,7 +81,9 @@ final class AppState: ObservableObject {
                 outputURL: outputURL,
                 timeline: controller.timeline,
                 preset: preset,
-                sourceSize: controller.sourceSize
+                sourceSize: controller.sourceSize,
+                trimStart: controller.trimStart,
+                trimEnd: controller.trimEnd
             )
             NSWorkspace.shared.activateFileViewerSelecting([outputURL])
             phase = .idle

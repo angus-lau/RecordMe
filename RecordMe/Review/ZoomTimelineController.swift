@@ -7,6 +7,8 @@ final class ZoomTimelineController: ObservableObject {
     @Published var selectedRegionID: UUID?
     @Published var currentTime: Double = 0.0
     @Published var isPlaying = false
+    @Published var trimStart: Double = 0.0
+    @Published var trimEnd: Double
 
     let intermediateURL: URL
     let duration: Double
@@ -21,6 +23,8 @@ final class ZoomTimelineController: ObservableObject {
         self.intermediateURL = intermediateURL
         self.duration = duration
         self.sourceSize = sourceSize
+
+        self.trimEnd = duration
 
         let player = AVPlayer(url: intermediateURL)
         self.player = player
