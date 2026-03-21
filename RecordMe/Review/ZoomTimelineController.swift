@@ -13,12 +13,45 @@ final class ZoomTimelineController: ObservableObject {
     let sourceSize: CGSize
     var player: AVPlayer?
 
+    private var timeObserver: Any?
+    private var endObserver: NSObjectProtocol?
+
     init(timeline: ZoomTimeline, intermediateURL: URL, duration: Double, sourceSize: CGSize) {
         self.timeline = timeline
         self.intermediateURL = intermediateURL
         self.duration = duration
         self.sourceSize = sourceSize
-        self.player = AVPlayer(url: intermediateURL)
+
+        let player = AVPlayer(url: intermediateURL)
+        self.player = player
+
+        // Update currentTime during playback (~30 fps)
+        let interval = CMTime(value: 1, timescale: 30)
+        timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
+            Task { @MainActor in
+                self?.currentTime = CMTimeGetSeconds(time)
+            }
+        }
+
+        // Handle end of playback
+        endObserver = NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: player.currentItem,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.isPlaying = false
+            }
+        }
+    }
+
+    deinit {
+        if let timeObserver, let player {
+            player.removeTimeObserver(timeObserver)
+        }
+        if let endObserver {
+            NotificationCenter.default.removeObserver(endObserver)
+        }
     }
 
     var selectedRegion: ZoomRegion? {
@@ -71,8 +104,19 @@ final class ZoomTimelineController: ObservableObject {
     }
 
     func togglePlayback() {
-        if isPlaying { player?.pause() } else { player?.play() }
-        isPlaying.toggle()
+        guard let player else { return }
+
+        if isPlaying {
+            player.pause()
+            isPlaying = false
+        } else {
+            // If at the end, seek to beginning first
+            if currentTime >= duration - 0.1 {
+                seek(to: 0)
+            }
+            player.play()
+            isPlaying = true
+        }
     }
 
     func jumpToNextMarker() {
