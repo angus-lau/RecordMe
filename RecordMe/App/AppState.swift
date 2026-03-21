@@ -17,6 +17,9 @@ final class AppState: ObservableObject {
     @Published var micEnabled = true
     @Published var reviewController: ZoomTimelineController?
 
+    /// Set by RecordMeApp to allow opening windows programmatically
+    var openWindow: ((String) -> Void)?
+
     let settings = AppSettings()
     let sourcePicker = CaptureSourcePicker()
     let hotkeyManager = HotkeyManager()
@@ -54,6 +57,7 @@ final class AppState: ObservableObject {
             sourceSize: sourceSize
         )
         phase = .reviewing
+        openWindow?("review")
     }
 
     func startExport(preset: ExportPreset) async {

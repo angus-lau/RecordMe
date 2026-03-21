@@ -3,10 +3,16 @@ import SwiftUI
 @main
 struct RecordMeApp: App {
     @StateObject private var appState = AppState()
+    @Environment(\.openWindow) private var openWindow
 
     var body: some Scene {
         MenuBarExtra {
             MenuBarView(state: appState)
+                .onAppear {
+                    appState.openWindow = { id in
+                        openWindow(id: id)
+                    }
+                }
         } label: {
             menuBarLabel
         }
