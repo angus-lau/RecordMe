@@ -9,10 +9,18 @@ struct VideoPreviewView: NSViewRepresentable {
         view.player = player
         view.controlsStyle = .none
         view.showsFullScreenToggleButton = false
+        view.videoGravity = .resizeAspect
+
+        // Ensure high quality rendering
+        view.wantsLayer = true
+        view.layer?.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
+
         return view
     }
 
     func updateNSView(_ nsView: AVPlayerView, context: Context) {
-        nsView.player = player
+        if nsView.player !== player {
+            nsView.player = player
+        }
     }
 }

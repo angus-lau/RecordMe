@@ -24,8 +24,9 @@ final class ScreenCaptureManager: NSObject {
         // Get display info for dimensions
         let content = try await SCShareableContent.current
         let display = content.displays.first!
-        let captureWidth = display.width * 2  // retina
-        let captureHeight = display.height * 2
+        let scaleFactor = Int(NSScreen.main?.backingScaleFactor ?? 2)
+        let captureWidth = display.width * scaleFactor
+        let captureHeight = display.height * scaleFactor
 
         // Configure stream
         let config = SCStreamConfiguration()
@@ -35,6 +36,7 @@ final class ScreenCaptureManager: NSObject {
         config.showsCursor = true
         config.capturesAudio = false
         config.pixelFormat = kCVPixelFormatType_32BGRA
+        config.queueDepth = 8  // larger buffer to prevent frame drops
 
         // Configure AVAssetWriter
         let writer = try AVAssetWriter(url: fileURL, fileType: .mp4)
