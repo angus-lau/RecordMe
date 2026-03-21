@@ -38,8 +38,8 @@ struct MenuBarView: View {
         }
         .padding()
         .frame(width: 280)
-        .task {
-            await state.sourcePicker.refresh()
+        .task(id: "refresh") {
+            await state.sourcePicker.forceRefresh()
         }
     }
 
