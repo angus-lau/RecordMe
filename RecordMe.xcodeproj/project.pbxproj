@@ -17,6 +17,7 @@
 		286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */; };
 		2968E853002C4A95A744CC99 /* EventLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E5546D86A776290A1631A2 /* EventLogTests.swift */; };
 		2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9E92EECB8B0D1D96A57E9D0 /* HotkeyManager.swift */; };
+		2A542B3232A6ADAC688BA555 /* PermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7CBF6A2F91C4A4B460D7F0 /* PermissionsView.swift */; };
 		2CBCB51F5D7948505BBD4B02 /* AudioCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3572F2F201AAF5D4DCEE2C36 /* AudioCaptureManager.swift */; };
 		3E542E2FF6EC207E1EBF30C8 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9922FE31CD1AE833E13EB0 /* TimelineView.swift */; };
 		42748DE1B1271A00E9E49679 /* MetalContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AD1EE08726C2B381EFC43AE /* MetalContext.swift */; };
@@ -65,6 +66,7 @@
 		420C0E8ABA3EF8997DF4D107 /* ZoomState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomState.swift; sourceTree = "<group>"; };
 		451C9183B4676E1D8862A804 /* TypingDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingDetectorTests.swift; sourceTree = "<group>"; };
 		4812A7223D6D17E44DA3F388 /* MetalZoomRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalZoomRenderer.swift; sourceTree = "<group>"; };
+		5E7CBF6A2F91C4A4B460D7F0 /* PermissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
 		6026D6EFC9CCA9D2CB272B39 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		8607C40CDF69AFBDDCD6F2BD /* ZoomAnimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomAnimatorTests.swift; sourceTree = "<group>"; };
 		86CBEDC5F0A1ABC8A6FAEB96 /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 			children = (
 				250890D24256292A2EB372AD /* AppState.swift */,
 				6026D6EFC9CCA9D2CB272B39 /* MenuBarView.swift */,
+				5E7CBF6A2F91C4A4B460D7F0 /* PermissionsView.swift */,
 				F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */,
 			);
 			path = App;
@@ -317,6 +320,7 @@
 				42748DE1B1271A00E9E49679 /* MetalContext.swift in Sources */,
 				F7818A1E9B4942B4DD8BA5F5 /* MetalZoomRenderer.swift in Sources */,
 				DA768ECE4AC4B254DBC881B5 /* Permissions.swift in Sources */,
+				2A542B3232A6ADAC688BA555 /* PermissionsView.swift in Sources */,
 				286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */,
 				BC500E9FB5F5B88913BB5E7B /* ReviewWindow.swift in Sources */,
 				224DD631D21712B9187D29C8 /* ScreenCaptureManager.swift in Sources */,
