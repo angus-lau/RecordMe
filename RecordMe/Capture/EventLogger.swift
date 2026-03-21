@@ -39,10 +39,10 @@ final class EventLogger {
             (1 << CGEventType.keyDown.rawValue)
 
         let callback: CGEventTapCallBack = { proxy, type, cgEvent, userInfo in
-            guard let userInfo else { return Unmanaged.passRetained(cgEvent) }
+            guard let userInfo else { return Unmanaged.passUnretained(cgEvent) }
             let logger = Unmanaged<EventLogger>.fromOpaque(userInfo).takeUnretainedValue()
             logger.handleCGEvent(type: type, event: cgEvent)
-            return Unmanaged.passRetained(cgEvent)
+            return Unmanaged.passUnretained(cgEvent)
         }
 
         let selfPtr = Unmanaged.passUnretained(self).toOpaque()

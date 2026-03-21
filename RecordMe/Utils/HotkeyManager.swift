@@ -19,6 +19,7 @@ final class HotkeyManager {
     func registerStopHotkey(_ handler: @escaping HotkeyHandler) { stopHandler = handler }
 
     func startListening() {
+        stopListening()
         let monitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
             self?.handleKeyEvent(event)
         }

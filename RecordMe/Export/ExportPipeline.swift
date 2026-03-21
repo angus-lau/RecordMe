@@ -23,6 +23,7 @@ final class ExportPipeline: ObservableObject {
         let durationSeconds = CMTimeGetSeconds(duration)
         let effectiveTrimEnd = trimEnd ?? durationSeconds
         let trimmedDuration = effectiveTrimEnd - trimStart
+        guard trimmedDuration > 0 else { throw RecordMeError.exportFailed("Trim range is empty") }
 
         let reader = try AVAssetReader(asset: asset)
 
@@ -31,7 +32,9 @@ final class ExportPipeline: ObservableObject {
         let rangeDuration = CMTime(seconds: trimmedDuration, preferredTimescale: 600)
         reader.timeRange = CMTimeRange(start: startCMTime, duration: rangeDuration)
 
-        let videoTrack = try await asset.loadTracks(withMediaType: .video).first!
+        guard let videoTrack = try await asset.loadTracks(withMediaType: .video).first else {
+            throw RecordMeError.exportFailed("No video track")
+        }
         let readerVideoOutput = AVAssetReaderTrackOutput(
             track: videoTrack,
             outputSettings: [
@@ -117,7 +120,13 @@ final class ExportPipeline: ObservableObject {
                 while !audioInput.isReadyForMoreMediaData {
                     try await Task.sleep(nanoseconds: 10_000_000)
                 }
-                audioInput.append(sampleBuffer)
+                // Rebase audio timestamp for trim
+                let originalTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                let offsetTime = CMTime(seconds: CMTimeGetSeconds(originalTime) - trimStart, preferredTimescale: 600)
+                var timingInfo = CMSampleTimingInfo(duration: CMSampleBufferGetDuration(sampleBuffer), presentationTimeStamp: offsetTime, decodeTimeStamp: .invalid)
+                var newBuffer: CMSampleBuffer?
+                CMSampleBufferCreateCopyWithNewTiming(allocator: nil, sampleBuffer: sampleBuffer, sampleTimingEntryCount: 1, sampleTimingArray: &timingInfo, sampleBufferOut: &newBuffer)
+                if let newBuffer { audioInput.append(newBuffer) }
             }
             audioInput.markAsFinished()
         }

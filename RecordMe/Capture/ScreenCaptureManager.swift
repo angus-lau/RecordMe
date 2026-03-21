@@ -13,6 +13,7 @@ final class ScreenCaptureManager: NSObject {
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
     private var isRecording = false
     private var sessionStarted = false
+    private let lock = NSLock()
 
     var intermediateFileURL: URL?
     private(set) var assetWriterExposed: AVAssetWriter?
@@ -23,7 +24,9 @@ final class ScreenCaptureManager: NSObject {
 
         // Get display info for dimensions
         let content = try await SCShareableContent.current
-        let display = content.displays.first!
+        guard let display = content.displays.first else {
+            throw RecordMeError.exportFailed("No display found")
+        }
         let scaleFactor = Int(NSScreen.main?.backingScaleFactor ?? 2)
         let captureWidth = display.width * scaleFactor
         let captureHeight = display.height * scaleFactor
@@ -77,17 +80,26 @@ final class ScreenCaptureManager: NSObject {
         try s.addStreamOutput(self, type: .screen, sampleHandlerQueue: .global(qos: .userInitiated))
         try await s.startCapture()
         stream = s
+        lock.lock()
         isRecording = true
+        lock.unlock()
     }
 
     func stopRecording() async throws -> URL {
         guard let stream, let writer = assetWriter else { throw RecordMeError.notRecording }
+        lock.lock()
         isRecording = false
+        lock.unlock()
         try await stream.stopCapture()
         self.stream = nil
 
         // Only finish writing if the session actually started (frames were received)
-        if sessionStarted && writer.status == .writing {
+        lock.lock()
+        let started = sessionStarted
+        sessionStarted = false
+        lock.unlock()
+
+        if started && writer.status == .writing {
             videoInput?.markAsFinished()
             await writer.finishWriting()
         } else {
@@ -99,7 +111,6 @@ final class ScreenCaptureManager: NSObject {
         assetWriterExposed = nil
         videoInput = nil
         pixelBufferAdaptor = nil
-        sessionStarted = false
         return url
     }
 }
@@ -112,7 +123,10 @@ extension ScreenCaptureManager: SCStreamDelegate {
 
 extension ScreenCaptureManager: SCStreamOutput {
     func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
-        guard isRecording, type == .screen else { return }
+        lock.lock()
+        let recording = isRecording
+        lock.unlock()
+        guard recording, type == .screen else { return }
         guard let videoInput, videoInput.isReadyForMoreMediaData else { return }
 
         // ScreenCaptureKit provides IOSurface-backed buffers — extract the pixel buffer
@@ -122,9 +136,15 @@ extension ScreenCaptureManager: SCStreamOutput {
         // Skip invalid timestamps
         guard timestamp.isValid && timestamp.isNumeric else { return }
 
-        if !sessionStarted {
-            assetWriter?.startSession(atSourceTime: timestamp)
+        lock.lock()
+        let started = sessionStarted
+        if !started {
             sessionStarted = true
+        }
+        lock.unlock()
+
+        if !started {
+            assetWriter?.startSession(atSourceTime: timestamp)
         }
 
         pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: timestamp)
