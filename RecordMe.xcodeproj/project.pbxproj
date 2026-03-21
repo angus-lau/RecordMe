@@ -11,6 +11,10 @@
 		286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35E825A897E52B0E1E1ABCA /* RecordMeApp.swift */; };
 		2968E853002C4A95A744CC99 /* EventLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E5546D86A776290A1631A2 /* EventLogTests.swift */; };
 		80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E95220530E6701B83D7E3D2C /* EventLog.swift */; };
+		AD537661FCDC78A6FA5022F5 /* ZoomModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BB98FB4A83E4C350E42DBD /* ZoomModelTests.swift */; };
+		BE06F7A3D1D5922FBC1AA465 /* ZoomRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E191E94D0A0CF00179E1502 /* ZoomRegion.swift */; };
+		C565F744D3453E65F33CED98 /* ZoomState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 420C0E8ABA3EF8997DF4D107 /* ZoomState.swift */; };
+		D4246281F1F4695431D11078 /* ExportPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EE24DCFD60122D18E1D665 /* ExportPreset.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,6 +28,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		12BB98FB4A83E4C350E42DBD /* ZoomModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomModelTests.swift; sourceTree = "<group>"; };
+		25EE24DCFD60122D18E1D665 /* ExportPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportPreset.swift; sourceTree = "<group>"; };
+		2E191E94D0A0CF00179E1502 /* ZoomRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomRegion.swift; sourceTree = "<group>"; };
+		420C0E8ABA3EF8997DF4D107 /* ZoomState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomState.swift; sourceTree = "<group>"; };
 		995497C1881D5EA638804E7A /* RecordMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AC678D1FEFE0F516F0A856F3 /* RecordMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEFA59427AF8C12527CC97C9 /* RecordMeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMeTests.swift; sourceTree = "<group>"; };
@@ -50,6 +58,8 @@
 				BF2F223C6CE38A4779A89047 /* RecordMe.entitlements */,
 				8DAB9794B2A2FFBA9549D8A8 /* App */,
 				0864FBF94C30BF9381CD2EE9 /* Capture */,
+				F4C1BF1A8FC134F6F5EECBDF /* Export */,
+				827E6D78F3226FB0BE7AC564 /* Zoom */,
 			);
 			path = RecordMe;
 			sourceTree = "<group>";
@@ -59,8 +69,18 @@
 			children = (
 				C7E5546D86A776290A1631A2 /* EventLogTests.swift */,
 				AEFA59427AF8C12527CC97C9 /* RecordMeTests.swift */,
+				12BB98FB4A83E4C350E42DBD /* ZoomModelTests.swift */,
 			);
 			path = RecordMeTests;
+			sourceTree = "<group>";
+		};
+		827E6D78F3226FB0BE7AC564 /* Zoom */ = {
+			isa = PBXGroup;
+			children = (
+				2E191E94D0A0CF00179E1502 /* ZoomRegion.swift */,
+				420C0E8ABA3EF8997DF4D107 /* ZoomState.swift */,
+			);
+			path = Zoom;
 			sourceTree = "<group>";
 		};
 		8DAB9794B2A2FFBA9549D8A8 /* App */ = {
@@ -87,6 +107,14 @@
 				995497C1881D5EA638804E7A /* RecordMeTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F4C1BF1A8FC134F6F5EECBDF /* Export */ = {
+			isa = PBXGroup;
+			children = (
+				25EE24DCFD60122D18E1D665 /* ExportPreset.swift */,
+			);
+			path = Export;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -165,6 +193,7 @@
 			files = (
 				2968E853002C4A95A744CC99 /* EventLogTests.swift in Sources */,
 				15BA8702CEAE8675CF700157 /* RecordMeTests.swift in Sources */,
+				AD537661FCDC78A6FA5022F5 /* ZoomModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,7 +202,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				80E921B4879DF1B4EB516704 /* EventLog.swift in Sources */,
+				D4246281F1F4695431D11078 /* ExportPreset.swift in Sources */,
 				286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */,
+				BE06F7A3D1D5922FBC1AA465 /* ZoomRegion.swift in Sources */,
+				C565F744D3453E65F33CED98 /* ZoomState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
