@@ -92,6 +92,16 @@ final class ZoomTimelineController: ObservableObject {
         timeline.regions[index].scale = max(1.5, min(3.0, timeline.regions[index].scale + delta))
     }
 
+    func moveRegion(_ region: ZoomRegion, to centerTime: Double) {
+        guard let index = timeline.regions.firstIndex(where: { $0.id == region.id }) else { return }
+        let halfDuration = region.duration / 2
+        let newStart = max(0, centerTime - halfDuration)
+        let newEnd = min(duration, newStart + region.duration)
+        timeline.regions[index].startTime = newEnd - region.duration
+        timeline.regions[index].endTime = newEnd
+        seek(to: centerTime)
+    }
+
     func setFocalPoint(_ point: CGPoint) {
         guard let id = selectedRegionID,
               let index = timeline.regions.firstIndex(where: { $0.id == id }) else { return }

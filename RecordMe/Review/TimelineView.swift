@@ -58,7 +58,7 @@ struct TimelineView: View {
                             .offset(x: startX, y: 8)
                     }
 
-                    // Markers
+                    // Markers — tap to select, drag to move
                     ForEach(controller.timeline.regions) { region in
                         let x = xPosition(for: (region.startTime + region.endTime) / 2, in: geo.size.width)
                         Circle()
@@ -68,6 +68,14 @@ struct TimelineView: View {
                                 Circle().stroke(controller.selectedRegionID == region.id ? Color.white : Color.clear, lineWidth: 2)
                             )
                             .offset(x: x - 7, y: 0)
+                            .gesture(
+                                DragGesture(minimumDistance: 3)
+                                    .onChanged { value in
+                                        controller.selectedRegionID = region.id
+                                        let time = timePosition(for: value.location.x, in: geo.size.width)
+                                        controller.moveRegion(region, to: time)
+                                    }
+                            )
                             .onTapGesture { controller.selectRegion(region) }
                     }
 
