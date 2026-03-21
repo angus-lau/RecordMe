@@ -31,6 +31,7 @@
 		D8CC17384600CD4DBD7BDDCE /* TypingDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451C9183B4676E1D8862A804 /* TypingDetectorTests.swift */; };
 		DA768ECE4AC4B254DBC881B5 /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86CBEDC5F0A1ABC8A6FAEB96 /* Permissions.swift */; };
 		ECD7643E3EC195840182413A /* ZoomAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88B814FE0283CC083C85812 /* ZoomAnimator.swift */; };
+		F7818A1E9B4942B4DD8BA5F5 /* MetalZoomRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4812A7223D6D17E44DA3F388 /* MetalZoomRenderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		3572F2F201AAF5D4DCEE2C36 /* AudioCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCaptureManager.swift; sourceTree = "<group>"; };
 		420C0E8ABA3EF8997DF4D107 /* ZoomState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomState.swift; sourceTree = "<group>"; };
 		451C9183B4676E1D8862A804 /* TypingDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingDetectorTests.swift; sourceTree = "<group>"; };
+		4812A7223D6D17E44DA3F388 /* MetalZoomRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalZoomRenderer.swift; sourceTree = "<group>"; };
 		8607C40CDF69AFBDDCD6F2BD /* ZoomAnimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomAnimatorTests.swift; sourceTree = "<group>"; };
 		86CBEDC5F0A1ABC8A6FAEB96 /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
 		97EFDFFB23761292E3D50421 /* ScreenCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenCaptureManager.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				25EE24DCFD60122D18E1D665 /* ExportPreset.swift */,
+				4812A7223D6D17E44DA3F388 /* MetalZoomRenderer.swift */,
 			);
 			path = Export;
 			sourceTree = "<group>";
@@ -276,6 +279,7 @@
 				D4246281F1F4695431D11078 /* ExportPreset.swift in Sources */,
 				2A3D514FD3837EFC7481077F /* HotkeyManager.swift in Sources */,
 				42748DE1B1271A00E9E49679 /* MetalContext.swift in Sources */,
+				F7818A1E9B4942B4DD8BA5F5 /* MetalZoomRenderer.swift in Sources */,
 				DA768ECE4AC4B254DBC881B5 /* Permissions.swift in Sources */,
 				286E262FDD3D0E836AB72BA0 /* RecordMeApp.swift in Sources */,
 				224DD631D21712B9187D29C8 /* ScreenCaptureManager.swift in Sources */,
