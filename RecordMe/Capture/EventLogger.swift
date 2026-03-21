@@ -24,7 +24,8 @@ final class EventLogger {
     }
 
     func logManualMarker() {
-        let pos = NSEvent.mouseLocation
+        // Use CGEvent location (top-left origin) to match ScreenCaptureKit coordinate space
+        let pos = CGEvent(source: nil)?.location ?? .zero
         let t = CACurrentMediaTime() - startTime
         let event = InputEvent(t: t, type: .marker, x: pos.x, y: pos.y)
         try? writer?.write(event)
@@ -81,8 +82,8 @@ final class EventLogger {
         case .rightMouseDown:
             try? writer?.write(InputEvent(t: t, type: .click, x: location.x, y: location.y, button: "right"))
         case .keyDown:
-            let cursorPos = NSEvent.mouseLocation
-            try? writer?.write(InputEvent(t: t, type: .key, x: cursorPos.x, y: cursorPos.y))
+            // Use CGEvent location for consistent top-left coordinate space
+            try? writer?.write(InputEvent(t: t, type: .key, x: location.x, y: location.y))
         default: break
         }
     }

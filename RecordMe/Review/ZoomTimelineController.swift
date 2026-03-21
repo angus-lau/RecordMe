@@ -122,12 +122,18 @@ final class ZoomTimelineController: ObservableObject {
     func jumpToNextMarker() {
         if let next = timeline.regions.first(where: { $0.startTime > currentTime + 0.1 }) {
             selectRegion(next)
+        } else {
+            // No next marker — jump forward 5 seconds
+            seek(to: min(duration, currentTime + 5.0))
         }
     }
 
     func jumpToPreviousMarker() {
         if let prev = timeline.regions.last(where: { $0.startTime < currentTime - 0.1 }) {
             selectRegion(prev)
+        } else {
+            // No previous marker — jump back 5 seconds
+            seek(to: max(0, currentTime - 5.0))
         }
     }
 }

@@ -19,27 +19,45 @@ struct ReviewWindow: View {
         ]
     }
 
+    private var currentZoomState: ZoomState {
+        controller.timeline.zoomState(at: controller.currentTime)
+    }
+
     var body: some View {
         VStack(spacing: 0) {
-            VideoPreviewView(player: controller.player)
-                .aspectRatio(controller.sourceSize.width / controller.sourceSize.height, contentMode: .fit)
-                .overlay(alignment: .topTrailing) {
-                    let zoom = controller.timeline.zoomState(at: controller.currentTime)
-                    if zoom.scale > 1.01 {
-                        Text(String(format: "%.1fx", zoom.scale))
-                            .font(.system(size: 12, weight: .semibold))
-                            .padding(.horizontal, 10).padding(.vertical, 4)
-                            .background(Color.indigo.opacity(0.8))
-                            .cornerRadius(4).padding(12)
-                    }
+            // Video preview with zoom applied
+            GeometryReader { geo in
+                VideoPreviewView(player: controller.player)
+                    .scaleEffect(currentZoomState.scale)
+                    .offset(zoomOffset(in: geo.size))
+                    .clipped()
+                    .animation(.easeInOut(duration: 0.05), value: currentZoomState.scale)
+            }
+            .aspectRatio(controller.sourceSize.width / controller.sourceSize.height, contentMode: .fit)
+            .clipped()
+            .overlay(alignment: .topTrailing) {
+                if currentZoomState.scale > 1.01 {
+                    Text(String(format: "%.1fx", currentZoomState.scale))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 10).padding(.vertical, 4)
+                        .background(Color.indigo.opacity(0.8))
+                        .cornerRadius(4).padding(12)
                 }
+            }
 
+            // Transport controls
             HStack(spacing: 12) {
-                Button { controller.jumpToPreviousMarker() } label: { Image(systemName: "backward.end.fill") }
-                Button { controller.togglePlayback() } label: {
-                    Image(systemName: controller.isPlaying ? "pause.fill" : "play.fill").font(.system(size: 18))
+                Button { controller.jumpToPreviousMarker() } label: {
+                    Image(systemName: "backward.end.fill").foregroundColor(.white)
                 }
-                Button { controller.jumpToNextMarker() } label: { Image(systemName: "forward.end.fill") }
+                Button { controller.togglePlayback() } label: {
+                    Image(systemName: controller.isPlaying ? "pause.fill" : "play.fill")
+                        .font(.system(size: 18)).foregroundColor(.white)
+                }
+                Button { controller.jumpToNextMarker() } label: {
+                    Image(systemName: "forward.end.fill").foregroundColor(.white)
+                }
                 Text(formatTime(controller.currentTime) + " / " + formatTime(controller.duration))
                     .font(.system(size: 13, design: .monospaced)).foregroundColor(.secondary)
                 Spacer()
@@ -49,9 +67,11 @@ struct ReviewWindow: View {
 
             Divider()
 
+            // Timeline with drag support
             TimelineView(controller: controller)
                 .padding(.horizontal, 20).padding(.vertical, 12)
 
+            // Legend
             HStack(spacing: 16) {
                 Label("Manual marker", systemImage: "circle.fill").font(.system(size: 11)).foregroundColor(.indigo)
                 Label("Typing detected", systemImage: "circle.fill").font(.system(size: 11)).foregroundColor(.orange)
@@ -59,11 +79,13 @@ struct ReviewWindow: View {
             }
             .padding(.horizontal, 20).padding(.bottom, 8)
 
+            // Marker detail
             MarkerDetailView(controller: controller)
                 .padding(.horizontal, 20).padding(.bottom, 8)
 
             Divider()
 
+            // Action bar
             HStack {
                 Button("+ Add Marker") { controller.addMarker(at: controller.currentTime) }
                 Button("Discard", role: .destructive) { onDiscard() }
@@ -89,13 +111,29 @@ struct ReviewWindow: View {
         .onDisappear { removeKeyMonitor() }
     }
 
+    /// Compute offset to pan toward the focal point during zoom
+    private func zoomOffset(in viewSize: CGSize) -> CGSize {
+        let zoom = currentZoomState
+        guard zoom.scale > 1.01 else { return .zero }
+
+        // Normalize focal point to [-0.5, 0.5] range (0,0 = center)
+        let normalizedX = (zoom.focalPoint.x / controller.sourceSize.width) - 0.5
+        let normalizedY = (zoom.focalPoint.y / controller.sourceSize.height) - 0.5
+
+        // Offset proportional to zoom level — pan toward focal point
+        let offsetX = -normalizedX * viewSize.width * (zoom.scale - 1.0)
+        let offsetY = -normalizedY * viewSize.height * (zoom.scale - 1.0)
+
+        return CGSize(width: offsetX, height: offsetY)
+    }
+
     private func installKeyMonitor() {
         keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
             switch event.keyCode {
-            case 49: controller.togglePlayback(); return nil
-            case 123: controller.adjustScale(delta: -0.5); return nil
-            case 124: controller.adjustScale(delta: 0.5); return nil
-            case 51: controller.deleteSelectedRegion(); return nil
+            case 49: controller.togglePlayback(); return nil       // Space
+            case 123: controller.adjustScale(delta: -0.5); return nil  // Left arrow
+            case 124: controller.adjustScale(delta: 0.5); return nil   // Right arrow
+            case 51: controller.deleteSelectedRegion(); return nil     // Delete
             default: break
             }
             if event.charactersIgnoringModifiers == "[" { controller.adjustDuration(delta: -0.5); return nil }

@@ -7,12 +7,14 @@ struct TimelineView: View {
         VStack(spacing: 4) {
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
+                    // Track background
                     RoundedRectangle(cornerRadius: 2)
                         .fill(Color.gray.opacity(0.2))
                         .frame(height: 4)
                         .frame(maxWidth: .infinity)
                         .offset(y: 14)
 
+                    // Zoom region highlights
                     ForEach(controller.timeline.regions) { region in
                         let startX = xPosition(for: region.startTime, in: geo.size.width)
                         let endX = xPosition(for: region.endTime, in: geo.size.width)
@@ -26,6 +28,7 @@ struct TimelineView: View {
                             .offset(x: startX, y: 8)
                     }
 
+                    // Markers
                     ForEach(controller.timeline.regions) { region in
                         let x = xPosition(for: (region.startTime + region.endTime) / 2, in: geo.size.width)
                         Circle()
@@ -38,21 +41,31 @@ struct TimelineView: View {
                             .onTapGesture { controller.selectRegion(region) }
                     }
 
+                    // Playhead
                     let playheadX = xPosition(for: controller.currentTime, in: geo.size.width)
-                    Rectangle()
-                        .fill(Color.white)
-                        .frame(width: 2, height: 28)
-                        .offset(x: playheadX - 1, y: 0)
+                    VStack(spacing: 0) {
+                        Circle()
+                            .fill(Color.white)
+                            .frame(width: 10, height: 10)
+                        Rectangle()
+                            .fill(Color.white)
+                            .frame(width: 2, height: 22)
+                    }
+                    .offset(x: playheadX - 5, y: -3)
                 }
                 .frame(height: 32)
                 .contentShape(Rectangle())
-                .onTapGesture { location in
-                    let time = timePosition(for: location.x, in: geo.size.width)
-                    controller.seek(to: time)
-                }
+                .gesture(
+                    DragGesture(minimumDistance: 0)
+                        .onChanged { value in
+                            let time = timePosition(for: value.location.x, in: geo.size.width)
+                            controller.seek(to: time)
+                        }
+                )
             }
             .frame(height: 32)
 
+            // Time labels
             HStack {
                 Text(formatTime(0))
                 Spacer()
@@ -74,8 +87,6 @@ struct TimelineView: View {
     }
 
     private func formatTime(_ seconds: Double) -> String {
-        let mins = Int(seconds) / 60
-        let secs = Int(seconds) % 60
-        return String(format: "%d:%02d", mins, secs)
+        String(format: "%d:%02d", Int(seconds) / 60, Int(seconds) % 60)
     }
 }
