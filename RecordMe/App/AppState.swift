@@ -126,10 +126,18 @@ final class AppState: ObservableObject {
         let duration = (try? await asset.load(.duration)) ?? .zero
         let durationSeconds = CMTimeGetSeconds(duration)
 
-        let tracks = (try? await asset.loadTracks(withMediaType: .video)) ?? []
-        var sourceSize = CGSize(width: 1920, height: 1080)
-        if let track = tracks.first {
-            sourceSize = (try? await track.load(.naturalSize)) ?? sourceSize
+        // Use screen point size (not video pixel size) because cursor coordinates are in points
+        var sourceSize = screenCapture.screenPointSize
+        if sourceSize == .zero {
+            // Fallback: derive from naturalSize / scale factor
+            let tracks = (try? await asset.loadTracks(withMediaType: .video)) ?? []
+            if let track = tracks.first {
+                let naturalSize = (try? await track.load(.naturalSize)) ?? CGSize(width: 1920, height: 1080)
+                let scale = NSScreen.main?.backingScaleFactor ?? 2.0
+                sourceSize = CGSize(width: naturalSize.width / scale, height: naturalSize.height / scale)
+            } else {
+                sourceSize = CGSize(width: 1920, height: 1080)
+            }
         }
 
         reviewController = ZoomTimelineController(

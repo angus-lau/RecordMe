@@ -39,8 +39,10 @@ final class MetalZoomRenderer {
             return
         }
 
-        let focalX = Float(zoomState.focalPoint.x / sourceSize.width)
-        let focalY = Float(zoomState.focalPoint.y / sourceSize.height)
+        // Normalize focal point to [0, 1] using the logical source size
+        // (event logger records in screen/point coordinates, sourceSize is in points)
+        let focalX = Float(max(0, min(1, zoomState.focalPoint.x / sourceSize.width)))
+        let focalY = Float(max(0, min(1, zoomState.focalPoint.y / sourceSize.height)))
 
         var params = ZoomParams(
             scale: Float(zoomState.scale),
