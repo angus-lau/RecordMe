@@ -37,6 +37,19 @@ final class CaptureSourcePicker: ObservableObject {
         await refresh()
     }
 
+    /// Returns the point-size of the selected capture source
+    var selectedSourceSize: CGSize? {
+        guard let source = selectedSource else { return nil }
+        switch source {
+        case .display(let display):
+            return CGSize(width: display.width, height: display.height)
+        case .window(let window):
+            return window.frame.size
+        case .app(_, let display):
+            return CGSize(width: display.width, height: display.height)
+        }
+    }
+
     func buildFilter() -> SCContentFilter? {
         guard let source = selectedSource else { return nil }
         switch source {
