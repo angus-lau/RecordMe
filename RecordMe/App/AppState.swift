@@ -71,7 +71,8 @@ final class AppState: ObservableObject {
         hotkeyManager.startListening()
 
         guard let filter = sourcePicker.buildFilter(),
-              let sourceSize = sourcePicker.selectedSourceSize else {
+              let pixelSize = sourcePicker.selectedSourcePixelSize,
+              let pointSize = sourcePicker.selectedSourcePointSize else {
             phase = .idle
             return
         }
@@ -79,7 +80,8 @@ final class AppState: ObservableObject {
             try await screenCapture.startRecording(
                 filter: filter,
                 sessionDir: sessionDir,
-                sourcePointSize: sourceSize
+                pixelSize: pixelSize,
+                pointSize: pointSize
             )
         } catch {
             print("Failed to start screen capture: \(error)")

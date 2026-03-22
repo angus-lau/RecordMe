@@ -20,14 +20,13 @@ final class ScreenCaptureManager: NSObject {
     /// Screen size in points (for coordinate normalization — cursor events are in point space)
     private(set) var screenPointSize: CGSize = .zero
 
-    func startRecording(filter: SCContentFilter, sessionDir: URL, sourcePointSize: CGSize) async throws {
+    func startRecording(filter: SCContentFilter, sessionDir: URL, pixelSize: CGSize, pointSize: CGSize) async throws {
         let fileURL = sessionDir.appendingPathComponent("intermediate.mp4")
         intermediateFileURL = fileURL
 
-        let scaleFactor = NSScreen.main?.backingScaleFactor ?? 2.0
-        let captureWidth = Int(sourcePointSize.width * scaleFactor)
-        let captureHeight = Int(sourcePointSize.height * scaleFactor)
-        screenPointSize = sourcePointSize
+        let captureWidth = Int(pixelSize.width)
+        let captureHeight = Int(pixelSize.height)
+        screenPointSize = pointSize
 
         // Configure stream
         let config = SCStreamConfiguration()

@@ -37,16 +37,35 @@ final class CaptureSourcePicker: ObservableObject {
         await refresh()
     }
 
-    /// Returns the point-size of the selected capture source
-    var selectedSourceSize: CGSize? {
+    /// Returns the pixel dimensions for SCStreamConfiguration
+    var selectedSourcePixelSize: CGSize? {
         guard let source = selectedSource else { return nil }
         switch source {
         case .display(let display):
+            // SCDisplay.width/height are in pixels
             return CGSize(width: display.width, height: display.height)
         case .window(let window):
-            return window.frame.size
+            // SCWindow.frame is in points — multiply by scale factor for pixels
+            let scale = NSScreen.main?.backingScaleFactor ?? 2.0
+            return CGSize(width: window.frame.width * scale, height: window.frame.height * scale)
         case .app(_, let display):
             return CGSize(width: display.width, height: display.height)
+        }
+    }
+
+    /// Returns the point-size for coordinate normalization (cursor events are in points)
+    var selectedSourcePointSize: CGSize? {
+        guard let source = selectedSource else { return nil }
+        let scale = NSScreen.main?.backingScaleFactor ?? 2.0
+        switch source {
+        case .display(let display):
+            // SCDisplay.width/height are pixels — divide by scale for points
+            return CGSize(width: CGFloat(display.width) / scale, height: CGFloat(display.height) / scale)
+        case .window(let window):
+            // SCWindow.frame is already in points
+            return window.frame.size
+        case .app(_, let display):
+            return CGSize(width: CGFloat(display.width) / scale, height: CGFloat(display.height) / scale)
         }
     }
 
