@@ -24,15 +24,15 @@ final class ScreenCaptureManager: NSObject {
         let fileURL = sessionDir.appendingPathComponent("intermediate.mp4")
         intermediateFileURL = fileURL
 
-        // Get display info for dimensions
-        let content = try await SCShareableContent.current
-        guard let display = content.displays.first else {
-            throw RecordMeError.exportFailed("No display found")
+        // Get dimensions from the main screen — ScreenCaptureKit handles cropping via the filter
+        guard let screen = NSScreen.main else {
+            throw RecordMeError.exportFailed("No screen found")
         }
-        let scaleFactor = Int(NSScreen.main?.backingScaleFactor ?? 2)
-        let captureWidth = display.width * scaleFactor
-        let captureHeight = display.height * scaleFactor
-        screenPointSize = CGSize(width: display.width, height: display.height)
+        let scaleFactor = screen.backingScaleFactor
+        let screenFrame = screen.frame
+        let captureWidth = Int(screenFrame.width * scaleFactor)
+        let captureHeight = Int(screenFrame.height * scaleFactor)
+        screenPointSize = screenFrame.size
 
         // Configure stream
         let config = SCStreamConfiguration()
