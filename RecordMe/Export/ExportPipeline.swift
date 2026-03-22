@@ -91,25 +91,32 @@ final class ExportPipeline: ObservableObject {
             // Use original timestamp for zoom state lookup (matches event log times)
             let zoomState = timeline.zoomState(at: seconds)
 
-            var destPixelBuffer: CVPixelBuffer?
-            guard let pool = pixelBufferAdaptor.pixelBufferPool else { continue }
-            CVPixelBufferPoolCreatePixelBuffer(nil, pool, &destPixelBuffer)
-            guard let dest = destPixelBuffer else { continue }
-
-            renderer.render(
-                source: sourcePixelBuffer,
-                destination: dest,
-                zoomState: zoomState,
-                sourceSize: sourceSize
-            )
-
             // Offset timestamp so trimmed output starts at 0
             let outputTime = CMTime(seconds: seconds - trimStart, preferredTimescale: 600)
 
             while !writerVideoInput.isReadyForMoreMediaData {
                 try await Task.sleep(nanoseconds: 10_000_000)
             }
-            pixelBufferAdaptor.append(dest, withPresentationTime: outputTime)
+
+            if zoomState.scale <= 1.01 {
+                // No zoom — pass through source frame directly (no Metal needed)
+                pixelBufferAdaptor.append(sourcePixelBuffer, withPresentationTime: outputTime)
+            } else {
+                // Apply zoom via Metal
+                var destPixelBuffer: CVPixelBuffer?
+                guard let pool = pixelBufferAdaptor.pixelBufferPool else { continue }
+                CVPixelBufferPoolCreatePixelBuffer(nil, pool, &destPixelBuffer)
+                guard let dest = destPixelBuffer else { continue }
+
+                renderer.render(
+                    source: sourcePixelBuffer,
+                    destination: dest,
+                    zoomState: zoomState,
+                    sourceSize: sourceSize
+                )
+
+                pixelBufferAdaptor.append(dest, withPresentationTime: outputTime)
+            }
 
             let elapsed = seconds - trimStart
             await MainActor.run { progress = elapsed / trimmedDuration }
