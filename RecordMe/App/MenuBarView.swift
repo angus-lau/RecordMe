@@ -29,7 +29,7 @@ struct MenuBarView: View {
             Toggle("Microphone", isOn: $state.micEnabled)
             Divider()
             Button("Start Recording") {
-                Task { await startRecording() }
+                Task { await state.startRecording() }
             }
             Divider()
             Button("Quit") {
@@ -126,7 +126,7 @@ struct MenuBarView: View {
             Text(startTime, style: .timer)
                 .font(.system(.body, design: .monospaced))
             Button("Stop Recording") {
-                Task { await stopRecording() }
+                Task { await state.stopRecording() }
             }
         }
         .padding()
@@ -141,68 +141,4 @@ struct MenuBarView: View {
         .padding()
     }
 
-    private func startRecording() async {
-        for i in stride(from: 3, through: 1, by: -1) {
-            state.phase = .countdown(i)
-            try? await Task.sleep(nanoseconds: 1_000_000_000)
-        }
-
-        let sessionID = UUID().uuidString
-        let sessionDir = state.recordingsBaseDir.appendingPathComponent(sessionID)
-        try? FileManager.default.createDirectory(at: sessionDir, withIntermediateDirectories: true)
-        state.currentSessionDir = sessionDir
-
-        let eventsURL = sessionDir.appendingPathComponent("events.jsonl")
-        try? state.eventLogger.start(fileURL: eventsURL)
-
-        state.hotkeyManager.configure(settings: state.settings)
-        state.hotkeyManager.registerZoomHotkey { [weak state] in
-            state?.eventLogger.logManualMarker()
-        }
-        state.hotkeyManager.registerStopHotkey { [weak state] in
-            Task { @MainActor in
-                guard case .recording = state?.phase else { return }
-                // Stop will be called by the user via button or this hotkey
-            }
-        }
-        state.hotkeyManager.startListening()
-
-        guard let filter = state.sourcePicker.buildFilter() else { return }
-        try? await state.screenCapture.startRecording(
-            filter: filter,
-            sessionDir: sessionDir
-        )
-
-        if state.micEnabled {
-            try? state.audioCapture.startCapture(sessionDir: sessionDir)
-        }
-
-        state.phase = .recording(startTime: Date())
-
-        // Dismiss the menu bar panel so it's not covering the screen during recording
-        NSApp.keyWindow?.close()
-    }
-
-    private func stopRecording() async {
-        state.hotkeyManager.stopListening()
-        state.eventLogger.stop()
-        state.audioCapture.stopCapture()
-        _ = try? await state.screenCapture.stopRecording()
-
-        state.phase = .processing
-
-        guard let sessionDir = state.currentSessionDir else { return }
-        let eventsURL = sessionDir.appendingPathComponent("events.jsonl")
-        let events = (try? EventLogReader.read(from: eventsURL)) ?? []
-
-        let timeline = ZoomEngine.process(
-            events: events,
-            defaultScale: state.settings.defaultZoomLevel,
-            defaultDuration: state.settings.defaultZoomDuration,
-            typingDetectionEnabled: state.settings.typingDetectionEnabled,
-            typingSensitivity: TypingSensitivity(rawValue: state.settings.typingDetectionSensitivity) ?? .medium
-        )
-        state.currentTimeline = timeline
-        Task { await state.openReviewWindow(timeline: timeline) }
-    }
 }

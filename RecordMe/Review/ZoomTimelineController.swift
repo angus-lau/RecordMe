@@ -37,10 +37,10 @@ final class ZoomTimelineController: ObservableObject {
             }
         }
 
-        // Handle end of playback
+        // Handle end of playback — use object: nil since currentItem may be nil at init time
         endObserver = NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
-            object: player.currentItem,
+            object: nil,
             queue: .main
         ) { [weak self] _ in
             Task { @MainActor in
@@ -49,13 +49,15 @@ final class ZoomTimelineController: ObservableObject {
         }
     }
 
-    deinit {
+    func cleanup() {
         if let timeObserver, let player {
             player.removeTimeObserver(timeObserver)
         }
+        self.timeObserver = nil
         if let endObserver {
             NotificationCenter.default.removeObserver(endObserver)
         }
+        self.endObserver = nil
     }
 
     var selectedRegion: ZoomRegion? {

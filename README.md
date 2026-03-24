@@ -1,6 +1,44 @@
-# RecordMe — Design Spec
+# RecordMe
 
 Lightweight macOS menu bar app that records your screen and applies cinematic auto-zoom effects in post-processing. Record → review zoom markers → export polished MP4.
+
+## Quick Start
+
+**Requirements:** macOS 13+ and Xcode (install from the App Store)
+
+```bash
+git clone https://github.com/angus-lau/RecordMe.git
+cd RecordMe
+make run
+```
+
+That's it. The app will build and launch in your menu bar.
+
+**Other commands:**
+- `make build` — build without launching
+- `make install` — copy to /Applications
+- `make clean` — remove build artifacts
+
+**First launch:** Grant Screen Recording and Accessibility permissions when prompted. You may need to restart the app after granting Screen Recording.
+
+## How to Use
+
+1. Click the RecordMe icon in your menu bar
+2. Select a capture source (display, window, or app)
+3. Click **Start Recording**
+4. Press **Cmd+Shift+Z** to drop zoom markers at points of interest
+5. Press **Cmd+Shift+S** or click Stop to end recording
+6. In the review window:
+   - **Click a marker** to select it, **click the video** to set where it zooms
+   - **Drag markers** along the timeline to reposition
+   - **← → keys** adjust zoom level, **[ ] keys** adjust duration
+   - **Drag yellow trim handles** to trim start/end
+   - **Delete** to remove a marker
+7. Pick an export preset and click **Export**
+
+---
+
+## Design Spec
 
 **Target:** macOS 13+ (Ventura), Apple Silicon primary. Direct distribution via GitHub.
 

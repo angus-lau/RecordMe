@@ -13,81 +13,64 @@ final class ScreenCaptureManager: NSObject {
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
     private var isRecording = false
     private var sessionStarted = false
+    private let lock = NSLock()
+    private var sessionDir: URL?
 
     var intermediateFileURL: URL?
-    private(set) var assetWriterExposed: AVAssetWriter?
+    /// Screen size in points (for coordinate normalization)
+    private(set) var screenPointSize: CGSize = .zero
 
     func startRecording(filter: SCContentFilter, sessionDir: URL) async throws {
         let fileURL = sessionDir.appendingPathComponent("intermediate.mp4")
         intermediateFileURL = fileURL
+        self.sessionDir = sessionDir
 
-        // Get display info for dimensions
-        let content = try await SCShareableContent.current
-        let display = content.displays.first!
-        let scaleFactor = Int(NSScreen.main?.backingScaleFactor ?? 2)
-        let captureWidth = display.width * scaleFactor
-        let captureHeight = display.height * scaleFactor
+        // Store point size from the main screen for coordinate normalization
+        if let screen = NSScreen.main {
+            screenPointSize = screen.frame.size
+        }
 
-        // Configure stream
+        // Configure stream — don't set width/height, let SCK use native resolution
         let config = SCStreamConfiguration()
-        config.width = captureWidth
-        config.height = captureHeight
         config.minimumFrameInterval = CMTime(value: 1, timescale: 60)
         config.showsCursor = true
         config.capturesAudio = false
         config.pixelFormat = kCVPixelFormatType_32BGRA
-        config.queueDepth = 8  // larger buffer to prevent frame drops
+        config.queueDepth = 8
 
-        // Configure AVAssetWriter
-        let writer = try AVAssetWriter(url: fileURL, fileType: .mp4)
-
-        let videoSettings: [String: Any] = [
-            AVVideoCodecKey: AVVideoCodecType.h264,
-            AVVideoWidthKey: captureWidth,
-            AVVideoHeightKey: captureHeight,
-            AVVideoCompressionPropertiesKey: [
-                AVVideoAverageBitRateKey: 120_000_000,
-            ],
-        ]
-
-        let vInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
-        vInput.expectsMediaDataInRealTime = true
-
-        // Use pixel buffer adaptor to handle format conversion
-        let adaptorAttrs: [String: Any] = [
-            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
-            kCVPixelBufferWidthKey as String: captureWidth,
-            kCVPixelBufferHeightKey as String: captureHeight,
-        ]
-        let adaptor = AVAssetWriterInputPixelBufferAdaptor(
-            assetWriterInput: vInput,
-            sourcePixelBufferAttributes: adaptorAttrs
-        )
-
-        writer.add(vInput)
-
-        assetWriter = writer
-        assetWriterExposed = writer
-        videoInput = vInput
-        pixelBufferAdaptor = adaptor
-        writer.startWriting()
-
-        // Start capture stream
         let s = SCStream(filter: filter, configuration: config, delegate: self)
         try s.addStreamOutput(self, type: .screen, sampleHandlerQueue: .global(qos: .userInitiated))
         try await s.startCapture()
         stream = s
+        lock.lock()
         isRecording = true
+        lock.unlock()
     }
 
     func stopRecording() async throws -> URL {
-        guard let stream, let writer = assetWriter else { throw RecordMeError.notRecording }
+        guard let stream, let writer = assetWriter else {
+            // If writer was never created (no frames), return the file URL anyway
+            lock.lock()
+            isRecording = false
+            lock.unlock()
+            if let s = self.stream {
+                try await s.stopCapture()
+                self.stream = nil
+            }
+            throw RecordMeError.notRecording
+        }
+        lock.lock()
         isRecording = false
+        lock.unlock()
         try await stream.stopCapture()
         self.stream = nil
 
-        // Only finish writing if the session actually started (frames were received)
-        if sessionStarted && writer.status == .writing {
+        lock.lock()
+        let started = sessionStarted
+        sessionStarted = false
+        lock.unlock()
+
+        if started && writer.status == .writing {
             videoInput?.markAsFinished()
             await writer.finishWriting()
         } else {
@@ -96,11 +79,49 @@ final class ScreenCaptureManager: NSObject {
 
         let url = writer.outputURL
         assetWriter = nil
-        assetWriterExposed = nil
         videoInput = nil
         pixelBufferAdaptor = nil
-        sessionStarted = false
         return url
+    }
+
+    /// Create the AVAssetWriter lazily on the first frame — so we know the exact dimensions
+    private func setupWriter(width: Int, height: Int) {
+        guard let fileURL = intermediateFileURL, assetWriter == nil else { return }
+
+        do {
+            let writer = try AVAssetWriter(url: fileURL, fileType: .mp4)
+
+            let videoSettings: [String: Any] = [
+                AVVideoCodecKey: AVVideoCodecType.h264,
+                AVVideoWidthKey: width,
+                AVVideoHeightKey: height,
+                AVVideoCompressionPropertiesKey: [
+                    AVVideoAverageBitRateKey: 120_000_000,
+                ],
+            ]
+
+            let vInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
+            vInput.expectsMediaDataInRealTime = true
+
+            let adaptorAttrs: [String: Any] = [
+                kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+                kCVPixelBufferWidthKey as String: width,
+                kCVPixelBufferHeightKey as String: height,
+            ]
+            let adaptor = AVAssetWriterInputPixelBufferAdaptor(
+                assetWriterInput: vInput,
+                sourcePixelBufferAttributes: adaptorAttrs
+            )
+
+            writer.add(vInput)
+            writer.startWriting()
+
+            assetWriter = writer
+            videoInput = vInput
+            pixelBufferAdaptor = adaptor
+        } catch {
+            // Writer setup failed — frames will be silently dropped
+        }
     }
 }
 
@@ -112,19 +133,33 @@ extension ScreenCaptureManager: SCStreamDelegate {
 
 extension ScreenCaptureManager: SCStreamOutput {
     func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
-        guard isRecording, type == .screen else { return }
-        guard let videoInput, videoInput.isReadyForMoreMediaData else { return }
+        lock.lock()
+        let recording = isRecording
+        lock.unlock()
+        guard recording, type == .screen else { return }
 
-        // ScreenCaptureKit provides IOSurface-backed buffers — extract the pixel buffer
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         let timestamp = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
-
-        // Skip invalid timestamps
         guard timestamp.isValid && timestamp.isNumeric else { return }
 
-        if !sessionStarted {
-            assetWriter?.startSession(atSourceTime: timestamp)
+        // Lazily create writer with actual frame dimensions
+        let width = CVPixelBufferGetWidth(pixelBuffer)
+        let height = CVPixelBufferGetHeight(pixelBuffer)
+        if assetWriter == nil {
+            setupWriter(width: width, height: height)
+        }
+
+        guard let videoInput, videoInput.isReadyForMoreMediaData else { return }
+
+        lock.lock()
+        let started = sessionStarted
+        if !started {
             sessionStarted = true
+        }
+        lock.unlock()
+
+        if !started {
+            assetWriter?.startSession(atSourceTime: timestamp)
         }
 
         pixelBufferAdaptor?.append(pixelBuffer, withPresentationTime: timestamp)

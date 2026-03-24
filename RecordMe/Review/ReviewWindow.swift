@@ -126,7 +126,10 @@ struct ReviewWindow: View {
         }
         .frame(minWidth: 800, minHeight: 600)
         .onAppear { installKeyMonitor() }
-        .onDisappear { removeKeyMonitor() }
+        .onDisappear {
+            removeKeyMonitor()
+            controller.cleanup()
+        }
     }
 
     /// Compute offset to pan toward the focal point during zoom

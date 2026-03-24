@@ -23,6 +23,7 @@ final class ExportPipeline: ObservableObject {
         let durationSeconds = CMTimeGetSeconds(duration)
         let effectiveTrimEnd = trimEnd ?? durationSeconds
         let trimmedDuration = effectiveTrimEnd - trimStart
+        guard trimmedDuration > 0 else { throw RecordMeError.exportFailed("Trim range is empty") }
 
         let reader = try AVAssetReader(asset: asset)
 
@@ -31,7 +32,9 @@ final class ExportPipeline: ObservableObject {
         let rangeDuration = CMTime(seconds: trimmedDuration, preferredTimescale: 600)
         reader.timeRange = CMTimeRange(start: startCMTime, duration: rangeDuration)
 
-        let videoTrack = try await asset.loadTracks(withMediaType: .video).first!
+        guard let videoTrack = try await asset.loadTracks(withMediaType: .video).first else {
+            throw RecordMeError.exportFailed("No video track")
+        }
         let readerVideoOutput = AVAssetReaderTrackOutput(
             track: videoTrack,
             outputSettings: [
@@ -88,25 +91,32 @@ final class ExportPipeline: ObservableObject {
             // Use original timestamp for zoom state lookup (matches event log times)
             let zoomState = timeline.zoomState(at: seconds)
 
-            var destPixelBuffer: CVPixelBuffer?
-            guard let pool = pixelBufferAdaptor.pixelBufferPool else { continue }
-            CVPixelBufferPoolCreatePixelBuffer(nil, pool, &destPixelBuffer)
-            guard let dest = destPixelBuffer else { continue }
-
-            renderer.render(
-                source: sourcePixelBuffer,
-                destination: dest,
-                zoomState: zoomState,
-                sourceSize: sourceSize
-            )
-
             // Offset timestamp so trimmed output starts at 0
             let outputTime = CMTime(seconds: seconds - trimStart, preferredTimescale: 600)
 
             while !writerVideoInput.isReadyForMoreMediaData {
                 try await Task.sleep(nanoseconds: 10_000_000)
             }
-            pixelBufferAdaptor.append(dest, withPresentationTime: outputTime)
+
+            if zoomState.scale <= 1.01 {
+                // No zoom — pass through source frame directly (no Metal needed)
+                pixelBufferAdaptor.append(sourcePixelBuffer, withPresentationTime: outputTime)
+            } else {
+                // Apply zoom via Metal
+                var destPixelBuffer: CVPixelBuffer?
+                guard let pool = pixelBufferAdaptor.pixelBufferPool else { continue }
+                CVPixelBufferPoolCreatePixelBuffer(nil, pool, &destPixelBuffer)
+                guard let dest = destPixelBuffer else { continue }
+
+                renderer.render(
+                    source: sourcePixelBuffer,
+                    destination: dest,
+                    zoomState: zoomState,
+                    sourceSize: sourceSize
+                )
+
+                pixelBufferAdaptor.append(dest, withPresentationTime: outputTime)
+            }
 
             let elapsed = seconds - trimStart
             await MainActor.run { progress = elapsed / trimmedDuration }
@@ -117,7 +127,13 @@ final class ExportPipeline: ObservableObject {
                 while !audioInput.isReadyForMoreMediaData {
                     try await Task.sleep(nanoseconds: 10_000_000)
                 }
-                audioInput.append(sampleBuffer)
+                // Rebase audio timestamp for trim
+                let originalTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer)
+                let offsetTime = CMTime(seconds: CMTimeGetSeconds(originalTime) - trimStart, preferredTimescale: 600)
+                var timingInfo = CMSampleTimingInfo(duration: CMSampleBufferGetDuration(sampleBuffer), presentationTimeStamp: offsetTime, decodeTimeStamp: .invalid)
+                var newBuffer: CMSampleBuffer?
+                CMSampleBufferCreateCopyWithNewTiming(allocator: nil, sampleBuffer: sampleBuffer, sampleTimingEntryCount: 1, sampleTimingArray: &timingInfo, sampleBufferOut: &newBuffer)
+                if let newBuffer { audioInput.append(newBuffer) }
             }
             audioInput.markAsFinished()
         }
