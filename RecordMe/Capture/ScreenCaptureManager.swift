@@ -25,13 +25,19 @@ final class ScreenCaptureManager: NSObject {
         intermediateFileURL = fileURL
         self.sessionDir = sessionDir
 
-        // Store point size from the main screen for coordinate normalization
-        if let screen = NSScreen.main {
-            screenPointSize = screen.frame.size
+        // Get actual screen dimensions for capture
+        guard let screen = NSScreen.main else {
+            throw RecordMeError.exportFailed("No screen found")
         }
+        let scale = screen.backingScaleFactor
+        let pixelWidth = Int(screen.frame.width * scale)
+        let pixelHeight = Int(screen.frame.height * scale)
+        screenPointSize = screen.frame.size
 
-        // Configure stream — don't set width/height, let SCK use native resolution
+        // Configure stream with native retina resolution
         let config = SCStreamConfiguration()
+        config.width = pixelWidth
+        config.height = pixelHeight
         config.minimumFrameInterval = CMTime(value: 1, timescale: 60)
         config.showsCursor = true
         config.capturesAudio = false
