@@ -124,10 +124,11 @@ struct MenuBarView: View {
         VStack {
             Text("\(count)")
                 .font(.system(size: 48, weight: .bold))
-            Text("Recording starts...")
+            Text("Starting in...")
                 .foregroundColor(.secondary)
         }
         .padding()
+        .frame(minWidth: 320)
     }
 
     private func recordingView(startTime: Date) -> some View {
