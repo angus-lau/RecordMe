@@ -12,17 +12,19 @@ final class ZoomTimelineController: ObservableObject {
 
     let intermediateURL: URL
     let duration: Double
-    let sourceSize: CGSize
+    let sourceSize: CGSize      // Point size for coordinate normalization
+    let videoSize: CGSize       // Actual video pixel size for aspect ratio
     var player: AVPlayer?
 
     private var timeObserver: Any?
     private var endObserver: NSObjectProtocol?
 
-    init(timeline: ZoomTimeline, intermediateURL: URL, duration: Double, sourceSize: CGSize) {
+    init(timeline: ZoomTimeline, intermediateURL: URL, duration: Double, sourceSize: CGSize, videoSize: CGSize) {
         self.timeline = timeline
         self.intermediateURL = intermediateURL
         self.duration = duration
         self.sourceSize = sourceSize
+        self.videoSize = videoSize
 
         self.trimEnd = duration
 

@@ -46,7 +46,7 @@ struct ReviewWindow: View {
                         controller.setFocalPoint(CGPoint(x: sourceX, y: sourceY))
                     }
             }
-            .aspectRatio(controller.sourceSize.width / controller.sourceSize.height, contentMode: .fit)
+            .aspectRatio(controller.videoSize.width / controller.videoSize.height, contentMode: .fit)
             .clipped()
             .overlay(alignment: .topTrailing) {
                 if currentZoomState.scale > 1.01 {
