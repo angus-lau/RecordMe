@@ -43,7 +43,6 @@ struct ReviewWindow: View {
                         let normalizedY = location.y / geo.size.height
                         let sourceX = normalizedX * controller.sourceSize.width
                         let sourceY = normalizedY * controller.sourceSize.height
-                        print("TAP: click=\(location) geoSize=\(geo.size) normalized=(\(normalizedX),\(normalizedY)) source=(\(sourceX),\(sourceY)) sourceSize=\(controller.sourceSize) videoSize=\(controller.videoSize)")
                         controller.setFocalPoint(CGPoint(x: sourceX, y: sourceY))
                     }
             }
