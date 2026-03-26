@@ -15,10 +15,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.recordme.app
         MACOSX_DEPLOYMENT_TARGET: "13.0"
         SWIFT_VERSION: "5.9"
-        CODE_SIGN_ENTITLEMENTS: RecordMe/RecordMe.entitlements
         INFOPLIST_FILE: RecordMe/Info.plist
-    entitlements:
-      path: RecordMe/RecordMe.entitlements
   RecordMeTests:
     type: bundle.unit-test
     platform: macOS

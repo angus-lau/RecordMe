@@ -82,7 +82,6 @@
 		AEFA59427AF8C12527CC97C9 /* RecordMeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordMeTests.swift; sourceTree = "<group>"; };
 		B4F3730E56088EAE9ABF44AE /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		B88B814FE0283CC083C85812 /* ZoomAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomAnimator.swift; sourceTree = "<group>"; };
-		BF2F223C6CE38A4779A89047 /* RecordMe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RecordMe.entitlements; sourceTree = "<group>"; };
 		C7E5546D86A776290A1631A2 /* EventLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLogTests.swift; sourceTree = "<group>"; };
 		CABB6C0F88805AB8F24306CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D0FCA19D9FF681886D7A1436 /* MarkerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerDetailView.swift; sourceTree = "<group>"; };
@@ -125,7 +124,6 @@
 			isa = PBXGroup;
 			children = (
 				CABB6C0F88805AB8F24306CD /* Info.plist */,
-				BF2F223C6CE38A4779A89047 /* RecordMe.entitlements */,
 				8DAB9794B2A2FFBA9549D8A8 /* App */,
 				0864FBF94C30BF9381CD2EE9 /* Capture */,
 				F4C1BF1A8FC134F6F5EECBDF /* Export */,
@@ -419,7 +417,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = RecordMe/RecordMe.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = RecordMe/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -527,7 +524,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = RecordMe/RecordMe.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = RecordMe/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
