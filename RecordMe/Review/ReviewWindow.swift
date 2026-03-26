@@ -140,22 +140,25 @@ struct ReviewWindow: View {
     }
 
     /// Compute offset to pan toward the focal point during zoom.
-    /// scaleEffect scales from the view center. We need to shift so the focal point ends up at center.
+    /// At scale 1.0: offset is zero (no pan). As scale increases, offset smoothly
+    /// increases to center the focal point in the view.
     private func zoomOffset(in viewSize: CGSize) -> CGSize {
         let zoom = currentZoomState
-        guard zoom.scale > 1.01 else { return .zero }
+        let scale = zoom.scale
+        guard scale > 1.001 else { return .zero }
 
-        // Focal point as fraction of view [0, 1]
-        let focalNormX = zoom.focalPoint.x / controller.sourceSize.width
-        let focalNormY = zoom.focalPoint.y / controller.sourceSize.height
+        // How far the focal point is from center, normalized to [-0.5, 0.5]
+        let focalNormX = zoom.focalPoint.x / controller.sourceSize.width - 0.5
+        let focalNormY = zoom.focalPoint.y / controller.sourceSize.height - 0.5
 
-        // After scaleEffect(scale) from center, the point that was at focalNorm
-        // is now at: center + (focalNorm - 0.5) * scale * viewSize
-        // We want it at the center of the view, so offset = -(focalNorm - 0.5) * scale * viewSize
-        // But offset is applied AFTER scale, in the parent coordinate space,
-        // so we don't multiply by scale — the scaled view moves in parent coords.
-        let offsetX = -(focalNormX - 0.5) * viewSize.width * zoom.scale
-        let offsetY = -(focalNormY - 0.5) * viewSize.height * zoom.scale
+        // scaleEffect(scale) scales from the center. A point at focalNorm * viewSize
+        // from center moves to focalNorm * viewSize * scale after scaling.
+        // To bring it back to center, we need offset = -focalNorm * viewSize * scale.
+        // But at scale=1.0 we want offset=0. The difference from identity:
+        // offset = -focalNorm * viewSize * (scale - 1.0)
+        // This smoothly ramps from 0 at scale=1 to full correction at higher scales.
+        let offsetX = -focalNormX * viewSize.width * (scale - 1.0)
+        let offsetY = -focalNormY * viewSize.height * (scale - 1.0)
 
         return CGSize(width: offsetX, height: offsetY)
     }
