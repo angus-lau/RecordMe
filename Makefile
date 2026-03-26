@@ -14,7 +14,7 @@ build:
 		-destination '$(DESTINATION)' \
 		-configuration $(CONFIG) \
 		-derivedDataPath $(BUILD_DIR) \
-		CODE_SIGN_IDENTITY=- \
+		-allowProvisioningUpdates \
 		build 2>&1 | tail -5
 	@echo ""
 	@echo "Built: $(BUILD_DIR)/Build/Products/$(CONFIG)/$(APP_NAME).app"
