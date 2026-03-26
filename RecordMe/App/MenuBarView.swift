@@ -37,10 +37,7 @@ struct MenuBarView: View {
             }
         }
         .padding()
-        .frame(width: 320)
-        .onAppear {
-            Task { await state.sourcePicker.forceRefresh() }
-        }
+        .frame(minWidth: 320)
     }
 
     private var sourcePickerSection: some View {

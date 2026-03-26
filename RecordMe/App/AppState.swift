@@ -28,6 +28,12 @@ final class AppState: ObservableObject {
     let audioCapture = AudioCaptureManager()
     let exportPipeline = ExportPipeline()
 
+    func loadSources() {
+        Task {
+            await sourcePicker.forceRefresh()
+        }
+    }
+
     var currentSessionDir: URL?
     var currentTimeline: ZoomTimeline?
 

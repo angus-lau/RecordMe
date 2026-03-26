@@ -12,6 +12,7 @@ struct RecordMeApp: App {
                     appState.openWindow = { id in
                         openWindow(id: id)
                     }
+                    appState.loadSources()
                 }
         } label: {
             menuBarLabel
