@@ -48,9 +48,20 @@ struct MenuBarView: View {
             Text("Capture Source").font(.subheadline).foregroundColor(.secondary)
 
             if state.sourcePicker.displays.isEmpty && state.sourcePicker.windows.isEmpty {
-                Text("Grant Screen Recording permission to see sources")
-                    .font(.caption)
-                    .foregroundColor(.orange)
+                if let error = state.sourcePicker.lastError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                        .lineLimit(3)
+                } else {
+                    Text("Loading sources...")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                Button("Retry") {
+                    Task { await state.sourcePicker.forceRefresh() }
+                }
+                .font(.caption)
                 Button("Open Privacy Settings") {
                     NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture")!)
                 }

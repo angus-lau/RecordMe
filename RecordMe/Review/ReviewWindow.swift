@@ -7,20 +7,20 @@ struct ReviewWindow: View {
     let onExport: (ExportPreset) -> Void
     let onDiscard: () -> Void
 
-    @State private var selectedPresetIndex = 2  // Default to Source
+    @State private var selectedPresetIndex = 0  // Default to Source HEVC
     @State private var keyMonitor: Any?
 
     private var presets: [ExportPreset] {
-        let aspect = controller.sourceSize.width / controller.sourceSize.height
-        let srcW = Int(controller.sourceSize.width)
-        let srcH = Int(controller.sourceSize.height)
+        let aspect = controller.videoSize.width / controller.videoSize.height
+        let vidW = Int(controller.videoSize.width)
+        let vidH = Int(controller.videoSize.height)
         return [
+            .source(width: vidW, height: vidH, codec: .hevc),
             .hd1080p(codec: .hevc, sourceAspect: aspect),
             .uhd4k(codec: .hevc, sourceAspect: aspect),
-            .source(width: srcW, height: srcH, codec: .hevc),
+            .source(width: vidW, height: vidH, codec: .h264),
             .hd1080p(codec: .h264, sourceAspect: aspect),
             .uhd4k(codec: .h264, sourceAspect: aspect),
-            .source(width: srcW, height: srcH, codec: .h264),
         ]
     }
 

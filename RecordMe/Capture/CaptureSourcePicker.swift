@@ -14,26 +14,24 @@ final class CaptureSourcePicker: ObservableObject {
     @Published var selectedSource: CaptureSourceType?
     private var hasRefreshed = false
 
-    func refresh() async {
-        // Only refresh once per app launch to avoid spamming TCC
-        guard !hasRefreshed else { return }
-        hasRefreshed = true
+    @Published var lastError: String?
 
+    func refresh() async {
         do {
-            let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
+            let content = try await SCShareableContent.current
             displays = content.displays
             windows = content.windows.filter { $0.isOnScreen && $0.frame.width > 50 }
             apps = content.applications.filter { !$0.applicationName.isEmpty }
             if selectedSource == nil, let display = displays.first {
                 selectedSource = .display(display)
             }
+            lastError = nil
         } catch {
-            // Screen Recording permission not granted — this is expected on first launch
+            lastError = error.localizedDescription
         }
     }
 
     func forceRefresh() async {
-        hasRefreshed = false
         await refresh()
     }
 
