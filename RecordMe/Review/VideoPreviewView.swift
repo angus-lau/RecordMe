@@ -9,7 +9,7 @@ struct VideoPreviewView: NSViewRepresentable {
         view.player = player
         view.controlsStyle = .none
         view.showsFullScreenToggleButton = false
-        view.videoGravity = .resizeAspect
+        view.videoGravity = .resizeAspectFill
 
         // Ensure high quality rendering
         view.wantsLayer = true
