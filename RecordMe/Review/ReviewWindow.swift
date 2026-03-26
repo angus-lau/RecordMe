@@ -117,12 +117,14 @@ struct ReviewWindow: View {
                 if exportPipeline.isExporting {
                     ProgressView(value: exportPipeline.progress).frame(width: 120)
                 } else {
-                    Picker("Preset", selection: $selectedPresetIndex) {
+                    Picker("", selection: $selectedPresetIndex) {
                         ForEach(presets.indices, id: \.self) { i in
-                            Text("\(presets[i].label) — \(presets[i].codec == .hevc ? "HEVC" : "H.264")").tag(i)
+                            let p = presets[i]
+                            let codec = p.codec == .hevc ? "HEVC" : "H.264"
+                            Text("\(p.label) (\(p.width)x\(p.height)) \(codec)").tag(i)
                         }
                     }
-                    .frame(width: 180)
+                    .frame(width: 280)
                     Button("Export") { onExport(presets[selectedPresetIndex]) }
                         .buttonStyle(.borderedProminent)
                 }
