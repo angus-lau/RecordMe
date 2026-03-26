@@ -43,6 +43,7 @@ struct ReviewWindow: View {
                         let normalizedY = location.y / geo.size.height
                         let sourceX = normalizedX * controller.sourceSize.width
                         let sourceY = normalizedY * controller.sourceSize.height
+                        print("TAP: click=\(location) geoSize=\(geo.size) normalized=(\(normalizedX),\(normalizedY)) source=(\(sourceX),\(sourceY)) sourceSize=\(controller.sourceSize) videoSize=\(controller.videoSize)")
                         controller.setFocalPoint(CGPoint(x: sourceX, y: sourceY))
                     }
             }
@@ -139,18 +140,23 @@ struct ReviewWindow: View {
         }
     }
 
-    /// Compute offset to pan toward the focal point during zoom
+    /// Compute offset to pan toward the focal point during zoom.
+    /// scaleEffect scales from the view center. We need to shift so the focal point ends up at center.
     private func zoomOffset(in viewSize: CGSize) -> CGSize {
         let zoom = currentZoomState
         guard zoom.scale > 1.01 else { return .zero }
 
-        // Normalize focal point to [-0.5, 0.5] range (0,0 = center)
-        let normalizedX = (zoom.focalPoint.x / controller.sourceSize.width) - 0.5
-        let normalizedY = (zoom.focalPoint.y / controller.sourceSize.height) - 0.5
+        // Focal point as fraction of view [0, 1]
+        let focalNormX = zoom.focalPoint.x / controller.sourceSize.width
+        let focalNormY = zoom.focalPoint.y / controller.sourceSize.height
 
-        // Offset proportional to zoom level — pan toward focal point
-        let offsetX = -normalizedX * viewSize.width * (zoom.scale - 1.0)
-        let offsetY = -normalizedY * viewSize.height * (zoom.scale - 1.0)
+        // After scaleEffect(scale) from center, the point that was at focalNorm
+        // is now at: center + (focalNorm - 0.5) * scale * viewSize
+        // We want it at the center of the view, so offset = -(focalNorm - 0.5) * scale * viewSize
+        // But offset is applied AFTER scale, in the parent coordinate space,
+        // so we don't multiply by scale — the scaled view moves in parent coords.
+        let offsetX = -(focalNormX - 0.5) * viewSize.width * zoom.scale
+        let offsetY = -(focalNormY - 0.5) * viewSize.height * zoom.scale
 
         return CGSize(width: offsetX, height: offsetY)
     }
