@@ -1,4 +1,3 @@
-// RecordMe/Export/ExportPreset.swift
 import Foundation
 import AVFoundation
 
@@ -20,15 +19,27 @@ struct ExportPreset {
     let codec: VideoCodec
     let label: String
 
-    static func hd1080p(codec: VideoCodec) -> ExportPreset {
-        ExportPreset(width: 1920, height: 1080, codec: codec, label: "1080p")
+    /// Creates a 1080p preset that preserves the source aspect ratio
+    static func hd1080p(codec: VideoCodec, sourceAspect: CGFloat = 16.0/9.0) -> ExportPreset {
+        let height = 1080
+        let width = Int(round(CGFloat(height) * sourceAspect))
+        // Width must be even for H.264/HEVC
+        let evenWidth = width % 2 == 0 ? width : width + 1
+        return ExportPreset(width: evenWidth, height: height, codec: codec, label: "1080p")
     }
 
-    static func uhd4k(codec: VideoCodec) -> ExportPreset {
-        ExportPreset(width: 3840, height: 2160, codec: codec, label: "4K")
+    /// Creates a 4K preset that preserves the source aspect ratio
+    static func uhd4k(codec: VideoCodec, sourceAspect: CGFloat = 16.0/9.0) -> ExportPreset {
+        let height = 2160
+        let width = Int(round(CGFloat(height) * sourceAspect))
+        let evenWidth = width % 2 == 0 ? width : width + 1
+        return ExportPreset(width: evenWidth, height: height, codec: codec, label: "4K")
     }
 
     static func source(width: Int, height: Int, codec: VideoCodec) -> ExportPreset {
-        ExportPreset(width: width, height: height, codec: codec, label: "Source")
+        // Ensure even dimensions
+        let evenWidth = width % 2 == 0 ? width : width + 1
+        let evenHeight = height % 2 == 0 ? height : height + 1
+        return ExportPreset(width: evenWidth, height: evenHeight, codec: codec, label: "Source")
     }
 }
