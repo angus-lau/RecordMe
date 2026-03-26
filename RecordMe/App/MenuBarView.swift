@@ -48,13 +48,18 @@ struct MenuBarView: View {
             Text("Capture Source").font(.subheadline).foregroundColor(.secondary)
 
             if state.sourcePicker.displays.isEmpty && state.sourcePicker.windows.isEmpty {
-                if let error = state.sourcePicker.lastError {
+                if state.sourcePicker.isLoading {
+                    HStack(spacing: 6) {
+                        ProgressView().controlSize(.small)
+                        Text("Loading sources...").font(.caption).foregroundColor(.secondary)
+                    }
+                } else if let error = state.sourcePicker.lastError {
                     Text(error)
                         .font(.caption)
                         .foregroundColor(.red)
                         .lineLimit(3)
                 } else {
-                    Text("Loading sources...")
+                    Text("No sources found")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }

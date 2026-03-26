@@ -15,10 +15,23 @@ final class CaptureSourcePicker: ObservableObject {
     private var hasRefreshed = false
 
     @Published var lastError: String?
+    @Published var isLoading = false
 
     func refresh() async {
+        isLoading = true
         do {
-            let content = try await SCShareableContent.current
+            let content = try await withThrowingTaskGroup(of: SCShareableContent.self) { group in
+                group.addTask {
+                    try await SCShareableContent.current
+                }
+                group.addTask {
+                    try await Task.sleep(nanoseconds: 3_000_000_000)
+                    throw CancellationError()
+                }
+                let result = try await group.next()!
+                group.cancelAll()
+                return result
+            }
             displays = content.displays
             windows = content.windows.filter { $0.isOnScreen && $0.frame.width > 50 }
             apps = content.applications.filter { !$0.applicationName.isEmpty }
@@ -26,9 +39,12 @@ final class CaptureSourcePicker: ObservableObject {
                 selectedSource = .display(display)
             }
             lastError = nil
+        } catch is CancellationError {
+            lastError = "Timed out — Screen Recording permission may not be granted"
         } catch {
             lastError = error.localizedDescription
         }
+        isLoading = false
     }
 
     func forceRefresh() async {
