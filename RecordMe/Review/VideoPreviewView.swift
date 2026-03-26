@@ -9,11 +9,7 @@ struct VideoPreviewView: NSViewRepresentable {
         view.player = player
         view.controlsStyle = .none
         view.showsFullScreenToggleButton = false
-        view.videoGravity = .resizeAspectFill
-
-        // Ensure high quality rendering
-        view.wantsLayer = true
-        view.layer?.contentsScale = NSScreen.main?.backingScaleFactor ?? 2.0
+        view.videoGravity = .resize  // Fill the entire view — SwiftUI handles aspect ratio
 
         return view
     }
